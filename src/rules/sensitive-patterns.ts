@@ -101,8 +101,10 @@ export const SENSITIVE_PATTERNS: SensitivePattern[] = [
   {
     id: 'ssn_us',
     name: 'US SSN',
-    regex: /\b\d{3}-\d{2}-\d{4}\b/g,
+    // Exclude date-like patterns (YYYY-MM-DD) and ranges starting with 000/666/9xx
+    regex: /\b(?!000|666|9\d\d)\d{3}-(?!00)\d{2}-(?!0000)\d{4}\b/g,
     replacement: '[REDACTED:SSN]',
+    validate: validateSSN,
   },
   {
     id: 'credit_card',
@@ -166,6 +168,22 @@ function validateIdCardCN(id: string): boolean {
     sum += parseInt(id[i]) * weights[i]
   }
   return checkCodes[sum % 11].toUpperCase() === id[17].toUpperCase()
+}
+
+/**
+ * Validate US SSN: reject date-like patterns (YYYY-MM-DD)
+ */
+function validateSSN(ssn: string): boolean {
+  const parts = ssn.split('-')
+  if (parts.length !== 3) return false
+  const [area, group, serial] = parts.map(Number)
+  // Reject if it looks like a date (first part 1900-2099)
+  if (area >= 1900 && area <= 2099 && group >= 1 && group <= 12) return false
+  // Valid SSN ranges
+  if (area < 1 || area > 899 || area === 666) return false
+  if (group < 1 || group > 99) return false
+  if (serial < 1 || serial > 9999) return false
+  return true
 }
 
 function validateLuhn(num: string): boolean {

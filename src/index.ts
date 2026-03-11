@@ -11,10 +11,24 @@ import type { ClawGuardConfig } from './types'
 
 function mergeConfig(userConfig: Partial<ClawGuardConfig> | undefined): ClawGuardConfig {
   if (!userConfig) return { ...DEFAULT_CONFIG }
+
+  // Validate mode
+  const mode = userConfig.mode === 'audit' ? 'audit' : 'enforce'
+
+  // Validate locale
+  const validLocales = ['auto', 'zh', 'en'] as const
+  const locale = validLocales.includes(userConfig.locale as any)
+    ? (userConfig.locale as typeof validLocales[number])
+    : DEFAULT_CONFIG.locale
+
+  // Validate injectionThreshold: clamp to 0-100
+  let threshold = userConfig.injectionThreshold ?? DEFAULT_CONFIG.injectionThreshold
+  threshold = Math.max(0, Math.min(100, Math.round(threshold)))
+
   return {
-    mode: userConfig.mode ?? DEFAULT_CONFIG.mode,
-    locale: userConfig.locale ?? DEFAULT_CONFIG.locale,
-    injectionThreshold: userConfig.injectionThreshold ?? DEFAULT_CONFIG.injectionThreshold,
+    mode,
+    locale,
+    injectionThreshold: threshold,
     layers: {
       ...DEFAULT_CONFIG.layers,
       ...(userConfig.layers || {}),

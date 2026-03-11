@@ -88,4 +88,12 @@ export const INJECTION_RULES_ZH: InjectionRule[] = [
     riskScore: 40,
     category: 'jailbreak',
   },
+  {
+    id: 'zh_xml_tag_injection',
+    name: 'XML/标签注入',
+    pattern: '<\\s*(?:system|instruction|prompt|admin|override|设置|系统|指令)\\s*>',
+    flags: 'i',
+    riskScore: 30,
+    category: 'injection',
+  },
 ]

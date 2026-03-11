@@ -1,27 +1,28 @@
 // src/layers/tool-blocker.ts — L3: Block dangerous tool calls via before_tool_call hook
 
-import { DANGEROUS_COMMANDS } from '../rules/dangerous-commands'
+import { DANGEROUS_COMMANDS, splitCommands } from '../rules/dangerous-commands'
 import { PROTECTED_PATHS } from '../rules/protected-paths'
 import { resolveLocale } from '../types'
 import type { ClawGuardConfig, ResolvedLocale } from '../types'
 import type { AuditLog } from '../audit-log'
+import { resolve } from 'path'
 
-// Tools that are always blocked
+// Tools that are always blocked (lowercase for case-insensitive matching)
 const BLOCKED_TOOLS = new Set([
   'payment', 'transfer', 'purchase',
   'stripe_charge', 'paypal_send',
 ])
 
-// Tools that get logged but not blocked
+// Tools that get logged but not blocked (lowercase)
 const SENSITIVE_TOOLS = new Set([
   'send_email', 'delete_email',
   'send_message', 'post_tweet',
   'file_delete', 'skill_install',
 ])
 
-// Tool names that execute shell commands
+// Tool names that execute shell commands (lowercase)
 const EXEC_TOOLS = new Set([
-  'exec', 'shell_exec', 'run_command', 'bash', 'Bash',
+  'exec', 'shell_exec', 'run_command', 'bash',
 ])
 
 export function setupToolBlocker(
@@ -34,10 +35,11 @@ export function setupToolBlocker(
 
   api.on('before_tool_call', (event: any) => {
     const tool: string = event.toolName || ''
+    const toolLower = tool.toLowerCase()
     const args: Record<string, any> = event.params || {}
 
-    // 1. Always-blocked tools
-    if (BLOCKED_TOOLS.has(tool)) {
+    // 1. Always-blocked tools (case-insensitive)
+    if (BLOCKED_TOOLS.has(toolLower)) {
       const reason = locale === 'zh'
         ? `安全策略禁止自动执行: ${tool}`
         : `Blocked by security policy: ${tool}`
@@ -56,22 +58,28 @@ export function setupToolBlocker(
       return
     }
 
-    // 2. Dangerous shell command detection
-    if (EXEC_TOOLS.has(tool)) {
+    // 2. Dangerous shell command detection (case-insensitive tool match)
+    if (EXEC_TOOLS.has(toolLower)) {
       const cmd = String(args.command || args.cmd || '')
-      const result = checkDangerousCommand(cmd, locale, tool, log, enforce)
+      // Split on command separators to catch chained attacks like "echo hi; rm -rf /"
+      const parts = splitCommands(cmd)
+      for (const part of parts) {
+        const result = checkDangerousCommand(part, locale, tool, log, enforce)
+        if (result) return result
+      }
+    }
+
+    // 3. Protected path detection (normalize path first)
+    const rawPath = String(args.path || args.file_path || args.filename || args.target || '')
+    if (rawPath && isWriteOrDeleteTool(toolLower)) {
+      // Resolve path to prevent ../ traversal bypass
+      const normalizedPath = normalizePath(rawPath)
+      const result = checkProtectedPath(normalizedPath, locale, tool, log, enforce)
       if (result) return result
     }
 
-    // 3. Protected path detection
-    const path = String(args.path || args.file_path || args.filename || args.target || '')
-    if (path && isWriteOrDeleteTool(tool)) {
-      const result = checkProtectedPath(path, locale, tool, log, enforce)
-      if (result) return result
-    }
-
-    // 4. Log sensitive tool usage
-    if (SENSITIVE_TOOLS.has(tool)) {
+    // 4. Log sensitive tool usage (case-insensitive)
+    if (SENSITIVE_TOOLS.has(toolLower)) {
       log.write({
         level: 'MEDIUM',
         layer: 'L3',
@@ -148,8 +156,24 @@ function checkProtectedPath(
   }
 }
 
-function isWriteOrDeleteTool(tool: string): boolean {
-  return /write|delete|remove|overwrite|truncate/i.test(tool)
+function isWriteOrDeleteTool(toolLower: string): boolean {
+  return /write|delete|remove|overwrite|truncate|edit/.test(toolLower)
+}
+
+/**
+ * Normalize path: resolve ../ traversal, expand ~, lowercase for comparison
+ */
+function normalizePath(p: string): string {
+  // Expand ~ to HOME
+  const expanded = p.startsWith('~')
+    ? p.replace(/^~/, process.env.HOME || '/root')
+    : p
+  // Resolve ../ and ./ sequences
+  try {
+    return resolve(expanded)
+  } catch {
+    return expanded
+  }
 }
 
 function truncate(s: string, max: number): string {

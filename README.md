@@ -28,7 +28,7 @@ ClawGuard protects your OpenClaw agent with 5 defense layers:
 - **Chinese PII detection** — ID card (with checksum validation), phone number, bank card (Luhn)
 - **Global PII detection** — API keys, JWT, passwords, US SSN, credit cards, emails
 - **24 injection rules** — 12 Chinese + 12 English patterns with risk scoring
-- **15 dangerous command rules** — fork bombs, reverse shells, disk formatting, etc.
+- **15 dangerous command rules** — fork bombs, reverse shells, disk formatting, etc. (all case-insensitive)
 - **12 protected path rules** — .env, .ssh, private keys, cloud credentials
 - **Dual mode** — `enforce` (block + log) or `audit` (log only)
 - **JSONL audit log** — zero-dependency, grep/jq friendly, auto-rotation at 100MB

@@ -1,6 +1,6 @@
 // src/audit-log.ts — JSONL audit log, zero dependencies
 
-import { appendFileSync, mkdirSync, renameSync, statSync } from 'fs'
+import { appendFileSync, chmodSync, mkdirSync, renameSync, statSync, writeFileSync } from 'fs'
 import { join } from 'path'
 import type { AuditEntry, ClawGuardConfig } from './types'
 
@@ -10,11 +10,18 @@ const MAX_SIZE_BYTES = 100 * 1024 * 1024 // 100 MB
 
 export class AuditLog {
   private config: ClawGuardConfig
+  private rotating = false
 
   constructor(config: ClawGuardConfig) {
     this.config = config
     try {
-      mkdirSync(LOG_DIR, { recursive: true })
+      mkdirSync(LOG_DIR, { recursive: true, mode: 0o700 })
+      // Ensure log file exists with restricted permissions (owner-only)
+      try {
+        statSync(LOG_FILE)
+      } catch {
+        writeFileSync(LOG_FILE, '', { mode: 0o600 })
+      }
     } catch { /* directory may already exist */ }
   }
 
@@ -25,17 +32,23 @@ export class AuditLog {
         mode: this.config.mode,
         ...entry,
       }
-      appendFileSync(LOG_FILE, JSON.stringify(record) + '\n')
+      appendFileSync(LOG_FILE, JSON.stringify(record) + '\n', { mode: 0o600 })
       this.rotateIfNeeded()
     } catch { /* log failure must not break plugin */ }
   }
 
   private rotateIfNeeded(): void {
+    if (this.rotating) return
     try {
       const stat = statSync(LOG_FILE)
       if (stat.size > MAX_SIZE_BYTES) {
-        renameSync(LOG_FILE, LOG_FILE + '.' + Date.now() + '.bak')
+        this.rotating = true
+        const ts = new Date().toISOString().replace(/[:.]/g, '-')
+        renameSync(LOG_FILE, `${LOG_FILE}.${ts}.bak`)
+        writeFileSync(LOG_FILE, '', { mode: 0o600 })
       }
-    } catch { /* ignore */ }
+    } catch { /* ignore */ } finally {
+      this.rotating = false
+    }
   }
 }
