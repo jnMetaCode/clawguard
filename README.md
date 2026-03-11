@@ -10,15 +10,18 @@
 
 ### What it does
 
-ClawGuard protects your OpenClaw agent with 5 defense layers:
+ClawGuard protects your OpenClaw agent with 8 defense layers:
 
 | Layer | Name | Hook | What it does |
 |-------|------|------|-------------|
-| L1 | Prompt Guard | `before_prompt_build` | Injects security rules into system prompt |
+| L1 | Prompt Guard | `before_prompt_build` | Injects security rules + canary token into system prompt |
 | L2 | Output Scanner | `tool_result_persist` | Redacts API keys, private keys, PII from tool output |
 | L3 | Tool Blocker | `before_tool_call` | Blocks dangerous commands (`rm -rf /`, `curl \| sh`, etc.) |
 | L4 | Input Auditor | `before_tool_call` + `message_received` | Detects prompt injection attacks (EN + ZH) |
 | L5 | Security Gate | `registerTool` | Defense-in-depth — agent must call `clawguard_check` before risky operations |
+| L6 | Outbound Guard | `message_sending` | Redacts PII from LLM responses + detects system prompt leaks via canary |
+| L7 | Data Flow Guard | `after_tool_call` + `before_tool_call` | Blocks data exfiltration chains (read file → send to network) |
+| L8 | Session Guard | `session_end` + `subagent_spawning` | Session security audit + subagent monitoring |
 
 ### Key features
 
@@ -174,15 +177,18 @@ Apache-2.0
 
 ### 功能简介
 
-ClawGuard 通过 5 层防御保护你的 OpenClaw 智能体：
+ClawGuard 通过 8 层防御保护你的 OpenClaw 智能体：
 
 | 层 | 名称 | Hook | 作用 |
 |----|------|------|------|
-| L1 | 安全提示注入 | `before_prompt_build` | 向系统提示注入安全规则 |
+| L1 | 安全提示注入 | `before_prompt_build` | 向系统提示注入安全规则 + Canary 令牌 |
 | L2 | 输出脱敏 | `tool_result_persist` | 自动脱敏 API 密钥、私钥、PII |
 | L3 | 工具拦截 | `before_tool_call` | 拦截危险命令（`rm -rf /`、`curl \| sh` 等） |
 | L4 | 输入审计 | `before_tool_call` + `message_received` | 中英文提示词注入检测 |
 | L5 | 安全门 | `registerTool` | 纵深防御 — Agent 执行危险操作前必须调用检查 |
+| L6 | 回复脱敏 | `message_sending` | 脱敏 LLM 回复中的敏感信息 + Canary 泄露检测 |
+| L7 | 数据流监控 | `after_tool_call` + `before_tool_call` | 阻止数据外泄链（读文件→发网络） |
+| L8 | 会话安全 | `session_end` + `subagent_spawning` | 会话安全审计 + 子 Agent 监控 |
 
 ### 核心特性
 
