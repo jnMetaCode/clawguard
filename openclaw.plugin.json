@@ -1,5 +1,5 @@
 {
-  "id": "clawguard",
+  "id": "openclaw-guard",
   "name": "ClawGuard",
   "description": "First bilingual (EN/ZH) security plugin for OpenClaw — injection detection, dangerous operation blocking, PII/secret redaction (incl. Chinese ID card, phone, bank card), audit logging",
   "version": "0.3.0",
