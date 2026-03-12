@@ -27,7 +27,10 @@
           "outputScanner": { "type": "boolean", "default": true },
           "toolBlocker":   { "type": "boolean", "default": true },
           "inputAuditor":  { "type": "boolean", "default": true },
-          "securityGate":  { "type": "boolean", "default": true }
+          "securityGate":  { "type": "boolean", "default": true },
+          "outboundGuard": { "type": "boolean", "default": true },
+          "dataFlowGuard": { "type": "boolean", "default": true },
+          "sessionGuard":  { "type": "boolean", "default": true }
         }
       },
       "injectionThreshold": {

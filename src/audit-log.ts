@@ -34,7 +34,10 @@ export class AuditLog {
       }
       appendFileSync(LOG_FILE, JSON.stringify(record) + '\n', { mode: 0o600 })
       this.rotateIfNeeded()
-    } catch { /* log failure must not break plugin */ }
+    } catch (e: any) {
+      // Log failure must not break plugin, but warn via stderr
+      try { process.stderr.write(`[ClawGuard] audit log write failed: ${e?.message}\n`) } catch {}
+    }
   }
 
   private rotateIfNeeded(): void {

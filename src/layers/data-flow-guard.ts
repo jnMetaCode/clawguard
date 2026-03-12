@@ -25,6 +25,7 @@ const PKG_INSTALL_PATTERN = /(?:npm|yarn|pnpm)\s+(?:install|add|i)\s|pip\s+insta
 // Track sensitive file reads within a session (tool call IDs or content hashes)
 const sensitiveReads: Map<string, { path: string; ts: number }> = new Map()
 const TRACKING_WINDOW_MS = 5 * 60 * 1000 // 5 min window
+const MAX_TRACKED_READS = 500 // Prevent unbounded memory growth
 
 export function setupDataFlowGuard(
   api: any,
@@ -45,6 +46,11 @@ export function setupDataFlowGuard(
     // Check if it's a protected/sensitive path
     for (const rule of PROTECTED_PATHS) {
       if (rule.pattern.test(path)) {
+        // Evict oldest entry if at capacity
+        if (sensitiveReads.size >= MAX_TRACKED_READS) {
+          const oldest = sensitiveReads.keys().next().value
+          if (oldest) sensitiveReads.delete(oldest)
+        }
         const key = `${Date.now()}-${path}`
         sensitiveReads.set(key, { path, ts: Date.now() })
 

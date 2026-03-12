@@ -83,17 +83,17 @@ export default {
     }
 
     // L6: Outbound Guard (message_sending — redact PII in LLM responses + canary detection)
-    if (config.layers.outboundGuard !== false) {
+    if (config.layers.outboundGuard) {
       setupOutboundGuard(api, config, log, enforce)
     }
 
     // L7: Data Flow Guard (after_tool_call + before_tool_call — anti-exfiltration)
-    if (config.layers.dataFlowGuard !== false) {
+    if (config.layers.dataFlowGuard) {
       setupDataFlowGuard(api, config, log, enforce)
     }
 
     // L8: Session Guard (session_end + subagent_spawning — lifecycle security)
-    if (config.layers.sessionGuard !== false) {
+    if (config.layers.sessionGuard) {
       setupSessionGuard(api, config, log, enforce)
     }
 
@@ -104,10 +104,8 @@ export default {
     }
 
     // Count enabled layers
-    const layerNames = ['promptGuard', 'outputScanner', 'toolBlocker', 'inputAuditor', 'securityGate']
-    const extraLayers = ['outboundGuard', 'dataFlowGuard', 'sessionGuard']
-    const enabledCount = layerNames.filter(k => (config.layers as any)[k]).length
-      + extraLayers.filter(k => (config.layers as any)[k] !== false).length
+    const allLayers = ['promptGuard', 'outputScanner', 'toolBlocker', 'inputAuditor', 'securityGate', 'outboundGuard', 'dataFlowGuard', 'sessionGuard']
+    const enabledCount = allLayers.filter(k => (config.layers as any)[k]).length
 
     api.logger.info(`[ClawGuard] ${enabledCount} defense layers active`)
 

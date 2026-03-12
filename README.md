@@ -30,7 +30,7 @@ ClawGuard protects your OpenClaw agent with 8 defense layers:
 - **Bilingual** — all messages, rules, and prompts in English and Chinese
 - **Chinese PII detection** — ID card (with checksum validation), phone number, bank card (Luhn)
 - **Global PII detection** — API keys, JWT, passwords, US SSN, credit cards, emails
-- **24 injection rules** — 12 Chinese + 12 English patterns with risk scoring
+- **25 injection rules** — 13 Chinese + 12 English patterns with risk scoring
 - **15 dangerous command rules** — fork bombs, reverse shells, disk formatting, etc. (all case-insensitive)
 - **12 protected path rules** — .env, .ssh, private keys, cloud credentials
 - **Dual mode** — `enforce` (block + log) or `audit` (log only)
@@ -97,15 +97,15 @@ grep '"level":"CRITICAL"' ~/.openclaw/clawguard/audit.jsonl | jq .
 jq -r '.layer' ~/.openclaw/clawguard/audit.jsonl | sort | uniq -c
 ```
 
-### How the 5 layers work together
+### How the 8 layers work together
 
 ```
 User Input
     │
     ▼
 ┌─────────────────────┐
-│ L1 Prompt Guard     │  Injects security rules into system prompt
-│ (before_prompt_build)│  so the agent is "security-aware"
+│ L1 Prompt Guard     │  Injects security rules + canary token
+│ (before_prompt_build)│  into system prompt (cached)
 └─────────────────────┘
     │
     ▼
@@ -127,6 +127,7 @@ User Input
 ┌─────────────────────┐
 │ L3 Tool Blocker     │  Hard block on dangerous commands/paths
 │ L4 Input Auditor    │  Injection check on tool arguments
+│ L7 Data Flow Guard  │  Block data exfiltration chains
 │ (before_tool_call)  │  Returns { block: true } if dangerous
 └─────────────────────┘
     │
@@ -135,8 +136,27 @@ User Input
     │
     ▼
 ┌─────────────────────┐
+│ L7 Data Flow Guard  │  Track sensitive file reads
+│ (after_tool_call)   │  for exfiltration detection
+└─────────────────────┘
+    │
+    ▼
+┌─────────────────────┐
 │ L2 Output Scanner   │  Redacts secrets/PII from output
 │ (tool_result_persist)│  before it's saved to conversation
+└─────────────────────┘
+    │
+    ▼
+┌─────────────────────┐
+│ L6 Outbound Guard   │  Redacts PII from LLM responses
+│ (message_sending)   │  + detects canary token leaks
+└─────────────────────┘
+    │
+    ▼
+┌─────────────────────┐
+│ L8 Session Guard    │  Session security audit
+│ (session_end +      │  + subagent monitoring
+│  subagent_spawning) │
 └─────────────────────┘
 ```
 
@@ -197,7 +217,7 @@ ClawGuard 通过 8 层防御保护你的 OpenClaw 智能体：
 - **中英双语** — 所有消息、规则、提示均支持中英文
 - **中国 PII 检测** — 身份证号（含校验位验证）、手机号、银行卡号（Luhn 校验）
 - **国际 PII 检测** — API Key、JWT、密码、美国 SSN、信用卡、邮箱
-- **24 条注入规则** — 12 条中文 + 12 条英文，带风险评分
+- **25 条注入规则** — 13 条中文 + 12 条英文，带风险评分
 - **双模式** — `enforce`（拦截+记录）或 `audit`（仅记录）
 - **JSONL 审计日志** — 零依赖、支持 grep/jq 查询、100MB 自动轮转
 

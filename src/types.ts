@@ -9,6 +9,9 @@ export interface ClawGuardConfig {
     toolBlocker: boolean
     inputAuditor: boolean
     securityGate: boolean
+    outboundGuard: boolean
+    dataFlowGuard: boolean
+    sessionGuard: boolean
   }
   injectionThreshold: number
 }
@@ -18,7 +21,7 @@ export type ResolvedLocale = 'zh' | 'en'
 export interface AuditEntry {
   ts: string
   level: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW' | 'INFO'
-  layer: 'L1' | 'L2' | 'L3' | 'L4' | 'L5'
+  layer: 'L1' | 'L2' | 'L3' | 'L4' | 'L5' | 'L6' | 'L7' | 'L8'
   action: 'block' | 'redact' | 'detect' | 'allow' | 'inject'
   detail: string
   tool?: string
@@ -70,6 +73,9 @@ export const DEFAULT_CONFIG: ClawGuardConfig = {
     toolBlocker: true,
     inputAuditor: true,
     securityGate: true,
+    outboundGuard: true,
+    dataFlowGuard: true,
+    sessionGuard: true,
   },
   injectionThreshold: 60,
 }

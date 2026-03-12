@@ -117,8 +117,11 @@ export function setupSecurityGate(
       _toolCallId: string,
       params: Record<string, unknown>,
     ) => {
-      const action = String(params.action || '')
-      const details = String(params.details || '')
+      const action = typeof params.action === 'string' ? params.action.trim() : ''
+      const details = typeof params.details === 'string' ? params.details.trim() : ''
+      if (!action) {
+        return textResult(JSON.stringify({ status: 'DENIED', reason: 'action parameter is required' }))
+      }
       const result = checkAction(action, details, locale, log)
       return textResult(JSON.stringify(result))
     },

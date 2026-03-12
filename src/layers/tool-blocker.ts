@@ -60,7 +60,8 @@ export function setupToolBlocker(
 
     // 2. Dangerous shell command detection (case-insensitive tool match)
     if (EXEC_TOOLS.has(toolLower)) {
-      const cmd = String(args.command || args.cmd || '')
+      const rawCmd = args.command ?? args.cmd ?? ''
+      const cmd = typeof rawCmd === 'string' ? rawCmd : ''
       // Split on command separators to catch chained attacks like "echo hi; rm -rf /"
       const parts = splitCommands(cmd)
       for (const part of parts) {

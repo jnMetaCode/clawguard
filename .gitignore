@@ -1,7 +1,29 @@
 node_modules/
 dist/
 *.tgz
+*.tar.gz
+
+# Logs
 *.log
+audit.jsonl
+
+# OS
 .DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment
 .env
 .env.*
+
+# npm
+.npm/
+package-lock.json
+
+# Temp
+/tmp/

@@ -47,7 +47,7 @@ export const DANGEROUS_COMMANDS: DangerousCommandRule[] = [
   },
   {
     id: 'chmod_777',
-    pattern: /chmod\s+(-[a-zA-Z]*\s+)?777\s/i,
+    pattern: /chmod\s+(-[a-zA-Z]*\s+)?777(?:\s|$)/i,
     description_zh: '设置全局可读写可执行权限',
     description_en: 'Set world-readable/writable/executable permissions',
   },
