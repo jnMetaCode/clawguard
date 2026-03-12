@@ -1,4 +1,4 @@
-// src/index.ts — ClawGuard plugin entry point (v0.3.0)
+// src/index.ts — ClawGuard plugin entry point (v0.3.1)
 // 8 defense layers + 6 slash commands + 1 security skill
 
 import { AuditLog } from './audit-log'

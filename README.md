@@ -53,7 +53,7 @@ irm https://raw.githubusercontent.com/jnMetaCode/clawguard/main/install.ps1 | ie
 **Or install manually:**
 
 ```bash
-openclaw plugins install clawguard
+openclaw plugins install openclaw-guard
 ```
 
 ```bash
@@ -64,7 +64,7 @@ openclaw plugins install ./node_modules/openclaw-guard
 
 ### Configuration
 
-In your OpenClaw settings, configure the `clawguard` plugin:
+In your OpenClaw settings, configure the `openclaw-guard` plugin:
 
 ```json
 {
@@ -251,7 +251,7 @@ irm https://raw.githubusercontent.com/jnMetaCode/clawguard/main/install.ps1 | ie
 **手动安装：**
 
 ```bash
-openclaw plugins install clawguard
+openclaw plugins install openclaw-guard
 ```
 
 ### 配置

@@ -191,7 +191,7 @@ cat <<'CONF'
   {
     "plugins": {
       "entries": {
-        "clawguard": { "enabled": true }
+        "openclaw-guard": { "enabled": true }
       }
     }
   }
