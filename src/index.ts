@@ -113,7 +113,7 @@ export default {
       level: 'INFO',
       layer: 'L1',
       action: 'allow',
-      detail: `ShellWard v0.3.2 started with ${enabledCount} layers`,
+      detail: `ShellWard v0.3.3 started with ${enabledCount} layers`,
     })
   },
 }
