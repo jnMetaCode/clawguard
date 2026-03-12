@@ -1,18 +1,21 @@
 {
   "name": "shellward",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "First bilingual (EN/ZH) security plugin for OpenClaw — injection detection, dangerous operation blocking, PII/secret redaction, audit logging",
   "keywords": [
+    "shellward",
     "openclaw",
     "security",
     "plugin",
     "injection-detection",
     "pii-redaction",
+    "ai-security",
     "chinese",
     "bilingual"
   ],
   "author": "jnMetaCode",
   "license": "Apache-2.0",
+  "homepage": "https://github.com/jnMetaCode/shellward#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/jnMetaCode/shellward"
