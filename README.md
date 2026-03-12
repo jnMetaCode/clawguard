@@ -42,12 +42,12 @@ ShellWard protects your OpenClaw agent with 8 defense layers:
 
 ```bash
 # Linux / macOS
-curl -fsSL https://raw.githubusercontent.com/jnMetaCode/clawguard/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/jnMetaCode/shellward/main/install.sh | bash
 ```
 
 ```powershell
 # Windows PowerShell
-irm https://raw.githubusercontent.com/jnMetaCode/clawguard/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/jnMetaCode/shellward/main/install.ps1 | iex
 ```
 
 **Or install manually:**
@@ -240,12 +240,12 @@ ShellWard 通过 8 层防御保护你的 OpenClaw 智能体：
 
 ```bash
 # Linux / macOS
-curl -fsSL https://raw.githubusercontent.com/jnMetaCode/clawguard/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/jnMetaCode/shellward/main/install.sh | bash
 ```
 
 ```powershell
 # Windows PowerShell
-irm https://raw.githubusercontent.com/jnMetaCode/clawguard/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/jnMetaCode/shellward/main/install.ps1 | iex
 ```
 
 **手动安装：**

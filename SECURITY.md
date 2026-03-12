@@ -15,7 +15,7 @@ If you discover a security vulnerability in ShellWard, please report it responsi
 
 Instead, please email: **ialanhacker@gmail.com**
 
-Or use [GitHub Security Advisories](https://github.com/jnMetaCode/clawguard/security/advisories/new) to report privately.
+Or use [GitHub Security Advisories](https://github.com/jnMetaCode/shellward/security/advisories/new) to report privately.
 
 ### What to include
 
