@@ -60,7 +60,7 @@ console.log('\n========== L1: Prompt Guard ==========')
 {
   const result = await triggerHook('before_prompt_build', {})
   test('返回 prependSystemContext', !!result?.prependSystemContext)
-  test('包含安全规则', result?.prependSystemContext?.includes('ClawGuard'))
+  test('包含安全规则', result?.prependSystemContext?.includes('ShellWard'))
   test('中文内容', result?.prependSystemContext?.includes('安全规则'))
 }
 
@@ -119,7 +119,7 @@ console.log('\n========== L3: Tool Blocker ==========')
     arguments: { command: 'rm -rf /' },
   })
   test('rm -rf / 被拦截', r1?.block === true)
-  test('拦截原因包含危险命令', r1?.blockReason?.includes('危险命令') || r1?.blockReason?.includes('ClawGuard'))
+  test('拦截原因包含危险命令', r1?.blockReason?.includes('危险命令') || r1?.blockReason?.includes('ShellWard'))
 
   // Test curl | sh
   const r2 = await triggerHook('before_tool_call', {
@@ -206,7 +206,7 @@ console.log('\n========== L4: Input Auditor ==========')
 // ===== TEST L5: Security Gate Tool =====
 console.log('\n========== L5: Security Gate ==========')
 {
-  test('clawguard_check 工具已注册', registeredTools.length > 0 && registeredTools[0].name === 'clawguard_check')
+  test('shellward_check 工具已注册', registeredTools.length > 0 && registeredTools[0].name === 'shellward_check')
 
   const gate = registeredTools[0]
 
@@ -231,7 +231,7 @@ console.log('\n========== L5: Security Gate ==========')
 console.log('\n========== 审计日志 ==========')
 {
   const fs = await import('fs')
-  const logPath = process.env.HOME + '/.openclaw/clawguard/audit.jsonl'
+  const logPath = process.env.HOME + '/.openclaw/shellward/audit.jsonl'
   const lines = fs.readFileSync(logPath, 'utf-8').trim().split('\n')
   const entries = lines.map(l => JSON.parse(l))
   const testEntries = entries.filter(e => e.ts > new Date(Date.now() - 60000).toISOString())
@@ -250,7 +250,7 @@ console.log('\n========== 审计日志 ==========')
 console.log('\n========================================')
 console.log(`  测试结果: ${passed} 通过, ${failed} 失败 (共 ${passed + failed} 项)`)
 if (failed === 0) {
-  console.log('  🎉 全部测试通过！ClawGuard 五层防御全部正常工作。')
+  console.log('  🎉 全部测试通过！ShellWard 五层防御全部正常工作。')
 } else {
   console.log('  ⚠️ 有测试失败，请检查。')
 }
