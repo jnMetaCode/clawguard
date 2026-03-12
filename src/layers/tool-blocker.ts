@@ -3,7 +3,7 @@
 import { DANGEROUS_COMMANDS, splitCommands } from '../rules/dangerous-commands'
 import { PROTECTED_PATHS } from '../rules/protected-paths'
 import { resolveLocale } from '../types'
-import type { ClawGuardConfig, ResolvedLocale } from '../types'
+import type { ShellWardConfig, ResolvedLocale } from '../types'
 import type { AuditLog } from '../audit-log'
 import { resolve } from 'path'
 
@@ -27,7 +27,7 @@ const EXEC_TOOLS = new Set([
 
 export function setupToolBlocker(
   api: any,
-  config: ClawGuardConfig,
+  config: ShellWardConfig,
   log: AuditLog,
   enforce: boolean,
 ) {
@@ -53,7 +53,7 @@ export function setupToolBlocker(
       })
 
       if (enforce) {
-        return { block: true, blockReason: `🚫 [ClawGuard] ${reason}` }
+        return { block: true, blockReason: `🚫 [ShellWard] ${reason}` }
       }
       return
     }
@@ -90,9 +90,9 @@ export function setupToolBlocker(
       })
     }
 
-  }, { name: 'clawguard.tool-blocker', priority: 200 })
+  }, { name: 'shellward.tool-blocker', priority: 200 })
 
-  api.logger.info('[ClawGuard] L3 Tool Blocker enabled')
+  api.logger.info('[ShellWard] L3 Tool Blocker enabled')
 }
 
 function checkDangerousCommand(
@@ -119,7 +119,7 @@ function checkDangerousCommand(
       })
 
       if (enforce) {
-        return { block: true, blockReason: `🚫 [ClawGuard] ${reason}` }
+        return { block: true, blockReason: `🚫 [ShellWard] ${reason}` }
       }
       return
     }
@@ -150,7 +150,7 @@ function checkProtectedPath(
       })
 
       if (enforce) {
-        return { block: true, blockReason: `🚫 [ClawGuard] ${reason}` }
+        return { block: true, blockReason: `🚫 [ShellWard] ${reason}` }
       }
       return
     }

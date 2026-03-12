@@ -1,4 +1,4 @@
-// src/index.ts — ClawGuard plugin entry point (v0.3.1)
+// src/index.ts — ShellWard plugin entry point (v0.3.1)
 // 8 defense layers + 6 slash commands + 1 security skill
 
 import { AuditLog } from './audit-log'
@@ -12,9 +12,9 @@ import { setupDataFlowGuard } from './layers/data-flow-guard'
 import { setupSessionGuard } from './layers/session-guard'
 import { registerAllCommands } from './commands/index'
 import { DEFAULT_CONFIG, resolveLocale } from './types'
-import type { ClawGuardConfig } from './types'
+import type { ShellWardConfig } from './types'
 
-function mergeConfig(userConfig: Partial<ClawGuardConfig> | undefined): ClawGuardConfig {
+function mergeConfig(userConfig: Partial<ShellWardConfig> | undefined): ShellWardConfig {
   if (!userConfig) return { ...DEFAULT_CONFIG }
 
   // Validate mode
@@ -42,7 +42,7 @@ function mergeConfig(userConfig: Partial<ClawGuardConfig> | undefined): ClawGuar
 }
 
 export default {
-  id: 'openclaw-guard',
+  id: 'shellward',
 
   register(api: any) {
     const config = mergeConfig(api.config)
@@ -53,7 +53,7 @@ export default {
     const modeLabel = locale === 'zh'
       ? `模式: ${config.mode}`
       : `mode: ${config.mode}`
-    api.logger.info(`[ClawGuard] Security plugin started (${modeLabel})`)
+    api.logger.info(`[ShellWard] Security plugin started (${modeLabel})`)
 
     // === Defense Layers (L1-L8) ===
 
@@ -100,20 +100,20 @@ export default {
     // === Slash Commands ===
     if (api.registerCommand) {
       registerAllCommands(api, config)
-      api.logger.info('[ClawGuard] 6 commands registered: /security /audit /harden /scan-plugins /check-updates /cg')
+      api.logger.info('[ShellWard] 6 commands registered: /security /audit /harden /scan-plugins /check-updates /cg')
     }
 
     // Count enabled layers
     const allLayers = ['promptGuard', 'outputScanner', 'toolBlocker', 'inputAuditor', 'securityGate', 'outboundGuard', 'dataFlowGuard', 'sessionGuard']
     const enabledCount = allLayers.filter(k => (config.layers as any)[k]).length
 
-    api.logger.info(`[ClawGuard] ${enabledCount} defense layers active`)
+    api.logger.info(`[ShellWard] ${enabledCount} defense layers active`)
 
     log.write({
       level: 'INFO',
       layer: 'L1',
       action: 'allow',
-      detail: `ClawGuard v0.3.1 started with ${enabledCount} layers`,
+      detail: `ShellWard v0.3.2 started with ${enabledCount} layers`,
     })
   },
 }

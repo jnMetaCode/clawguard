@@ -2,19 +2,19 @@
 
 import { readFileSync, statSync } from 'fs'
 import { join } from 'path'
-import type { ClawGuardConfig } from '../types'
+import type { ShellWardConfig } from '../types'
 import { resolveLocale } from '../types'
 
-const LOG_FILE = join(process.env.HOME || '~', '.openclaw', 'clawguard', 'audit.jsonl')
+const LOG_FILE = join(process.env.HOME || '~', '.openclaw', 'shellward', 'audit.jsonl')
 
-export function registerAuditCommand(api: any, config: ClawGuardConfig) {
+export function registerAuditCommand(api: any, config: ShellWardConfig) {
   const locale = resolveLocale(config)
 
   api.registerCommand({
     name: 'audit',
     description: locale === 'zh'
-      ? '📋 查看 ClawGuard 审计日志 (用法: /audit [数量] [block|redact|critical])'
-      : '📋 View ClawGuard audit log (usage: /audit [count] [block|redact|critical])',
+      ? '📋 查看 ShellWard 审计日志 (用法: /audit [数量] [block|redact|critical])'
+      : '📋 View ShellWard audit log (usage: /audit [count] [block|redact|critical])',
     acceptsArgs: true,
     handler: (ctx: any) => {
       const zh = locale === 'zh'

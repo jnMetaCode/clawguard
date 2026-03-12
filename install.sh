@@ -1,6 +1,6 @@
 #!/bin/bash
-# ClawGuard One-Click Installer / 一键安装脚本
-# Usage: curl -fsSL https://raw.githubusercontent.com/jnMetaCode/clawguard/main/install.sh | bash
+# ShellWard One-Click Installer / 一键安装脚本
+# Usage: curl -fsSL https://raw.githubusercontent.com/jnMetaCode/shellward/main/install.sh | bash
 
 set -e
 
@@ -19,16 +19,16 @@ is_zh() {
 }
 
 if is_zh; then
-  MSG_BANNER="🛡️  ClawGuard 安全插件 一键安装"
+  MSG_BANNER="🛡️  ShellWard 安全插件 一键安装"
   MSG_CHECKING="正在检查环境..."
   MSG_NODE_MISSING="❌ 未找到 Node.js (需要 v18+)。请先安装: https://nodejs.org"
   MSG_NODE_OLD="❌ Node.js 版本过低 (当前: %s, 需要: v18+)。请升级: https://nodejs.org"
   MSG_NODE_OK="✅ Node.js %s"
   MSG_OC_MISSING="❌ 未找到 OpenClaw。请先安装: npm install -g openclaw"
   MSG_OC_OK="✅ OpenClaw %s"
-  MSG_INSTALLING="正在安装 ClawGuard..."
-  MSG_ALREADY="⚠️  ClawGuard 已安装，正在更新..."
-  MSG_CLONE="正在下载 ClawGuard..."
+  MSG_INSTALLING="正在安装 ShellWard..."
+  MSG_ALREADY="⚠️  ShellWard 已安装，正在更新..."
+  MSG_CLONE="正在下载 ShellWard..."
   MSG_NPM="通过 npm 安装..."
   MSG_REGISTER="正在注册插件..."
   MSG_SUCCESS="🎉 安装成功！"
@@ -38,24 +38,24 @@ if is_zh; then
   MSG_CMD2="  /security                            # 查看安全状态"
   MSG_CMD3="  /audit                               # 查看审计日志"
   MSG_CMD4="  /harden                              # 安全扫描"
-  MSG_DOCS="文档: https://github.com/jnMetaCode/clawguard"
+  MSG_DOCS="文档: https://github.com/jnMetaCode/shellward"
   MSG_MODE_TITLE="选择安装方式:"
   MSG_MODE_1="  1) npm 安装 (推荐，自动更新)"
   MSG_MODE_2="  2) 源码安装 (离线可用)"
   MSG_MODE_PROMPT="请输入 [1/2] (默认 1): "
-  MSG_DONE="安装完成！ClawGuard 将在下次启动 OpenClaw 时自动加载。"
+  MSG_DONE="安装完成！ShellWard 将在下次启动 OpenClaw 时自动加载。"
   MSG_CONFIG="配置文件 (可选):"
 else
-  MSG_BANNER="🛡️  ClawGuard Security Plugin — One-Click Install"
+  MSG_BANNER="🛡️  ShellWard Security Plugin — One-Click Install"
   MSG_CHECKING="Checking environment..."
   MSG_NODE_MISSING="❌ Node.js not found (v18+ required). Install: https://nodejs.org"
   MSG_NODE_OLD="❌ Node.js too old (current: %s, need: v18+). Upgrade: https://nodejs.org"
   MSG_NODE_OK="✅ Node.js %s"
   MSG_OC_MISSING="❌ OpenClaw not found. Install: npm install -g openclaw"
   MSG_OC_OK="✅ OpenClaw %s"
-  MSG_INSTALLING="Installing ClawGuard..."
-  MSG_ALREADY="⚠️  ClawGuard already installed, updating..."
-  MSG_CLONE="Downloading ClawGuard..."
+  MSG_INSTALLING="Installing ShellWard..."
+  MSG_ALREADY="⚠️  ShellWard already installed, updating..."
+  MSG_CLONE="Downloading ShellWard..."
   MSG_NPM="Installing via npm..."
   MSG_REGISTER="Registering plugin..."
   MSG_SUCCESS="🎉 Installation successful!"
@@ -65,12 +65,12 @@ else
   MSG_CMD2="  /security                            # View security status"
   MSG_CMD3="  /audit                               # View audit log"
   MSG_CMD4="  /harden                              # Security scan"
-  MSG_DOCS="Docs: https://github.com/jnMetaCode/clawguard"
+  MSG_DOCS="Docs: https://github.com/jnMetaCode/shellward"
   MSG_MODE_TITLE="Choose install method:"
   MSG_MODE_1="  1) npm install (recommended, auto-update)"
   MSG_MODE_2="  2) source install (works offline)"
   MSG_MODE_PROMPT="Enter [1/2] (default 1): "
-  MSG_DONE="Done! ClawGuard will auto-load next time OpenClaw starts."
+  MSG_DONE="Done! ShellWard will auto-load next time OpenClaw starts."
   MSG_CONFIG="Configuration (optional):"
 fi
 
@@ -122,7 +122,7 @@ fi
 echo ""
 
 # --- Step 3: Install ---
-PLUGIN_DIR="${HOME}/.openclaw/plugins/clawguard"
+PLUGIN_DIR="${HOME}/.openclaw/plugins/shellward"
 
 if [ -d "$PLUGIN_DIR" ]; then
   echo -e "${YELLOW}$MSG_ALREADY${NC}"
@@ -133,17 +133,17 @@ mkdir -p "${HOME}/.openclaw/plugins"
 
 clone_install() {
   echo -e "${BLUE}$MSG_CLONE${NC}"
-  git clone --depth 1 https://github.com/jnMetaCode/clawguard.git "$PLUGIN_DIR" 2>/dev/null
+  git clone --depth 1 https://github.com/jnMetaCode/shellward.git "$PLUGIN_DIR" 2>/dev/null
   rm -rf "$PLUGIN_DIR/.git"
 }
 
 if [ "$INSTALL_METHOD" = "1" ]; then
   echo -e "${BLUE}$MSG_NPM${NC}"
   cd /tmp
-  rm -rf openclaw-guard-npm-install
-  mkdir openclaw-guard-npm-install && cd openclaw-guard-npm-install
-  if npm pack openclaw-guard 2>/dev/null; then
-    tar xzf openclaw-guard-*.tgz
+  rm -rf shellward-npm-install
+  mkdir shellward-npm-install && cd shellward-npm-install
+  if npm pack shellward 2>/dev/null; then
+    tar xzf shellward-*.tgz
     mv package "$PLUGIN_DIR"
     # Verify npm package has correct structure
     if [ ! -f "$PLUGIN_DIR/src/index.ts" ]; then
@@ -154,7 +154,7 @@ if [ "$INSTALL_METHOD" = "1" ]; then
   else
     clone_install
   fi
-  cd /tmp && rm -rf openclaw-guard-npm-install
+  cd /tmp && rm -rf shellward-npm-install
 else
   clone_install
 fi
@@ -191,7 +191,7 @@ cat <<'CONF'
   {
     "plugins": {
       "entries": {
-        "openclaw-guard": { "enabled": true }
+        "shellward": { "enabled": true }
       }
     }
   }

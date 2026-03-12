@@ -3,7 +3,7 @@
 import { execSync } from 'child_process'
 import { existsSync, readFileSync } from 'fs'
 import { join } from 'path'
-import type { ClawGuardConfig } from '../types'
+import type { ShellWardConfig } from '../types'
 import { resolveLocale } from '../types'
 
 // Known vulnerability database (hardcoded, updated with plugin releases)
@@ -32,7 +32,7 @@ const KNOWN_VULNS = [
   },
 ]
 
-export function registerCheckUpdatesCommand(api: any, config: ClawGuardConfig) {
+export function registerCheckUpdatesCommand(api: any, config: ShellWardConfig) {
   const locale = resolveLocale(config)
 
   api.registerCommand({
@@ -62,19 +62,19 @@ export function registerCheckUpdatesCommand(api: any, config: ClawGuardConfig) {
         : `### OpenClaw Version: ${currentVersion}`)
       lines.push('')
 
-      // 2. Check ClawGuard version
-      let clawguardVersion = 'unknown'
+      // 2. Check ShellWard version
+      let shellwardVersion = 'unknown'
       try {
         const pkgPath = join(__dirname, '../../package.json')
         if (existsSync(pkgPath)) {
           const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'))
-          clawguardVersion = pkg.version || 'unknown'
+          shellwardVersion = pkg.version || 'unknown'
         }
       } catch { /* skip */ }
 
       lines.push(zh
-        ? `### ClawGuard 版本: ${clawguardVersion}`
-        : `### ClawGuard Version: ${clawguardVersion}`)
+        ? `### ShellWard 版本: ${shellwardVersion}`
+        : `### ShellWard Version: ${shellwardVersion}`)
       lines.push('')
 
       // 3. Check known vulnerabilities

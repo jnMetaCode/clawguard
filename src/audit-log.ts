@@ -2,17 +2,17 @@
 
 import { appendFileSync, chmodSync, mkdirSync, renameSync, statSync, writeFileSync } from 'fs'
 import { join } from 'path'
-import type { AuditEntry, ClawGuardConfig } from './types'
+import type { AuditEntry, ShellWardConfig } from './types'
 
-const LOG_DIR = join(process.env.HOME || '~', '.openclaw', 'clawguard')
+const LOG_DIR = join(process.env.HOME || '~', '.openclaw', 'shellward')
 const LOG_FILE = join(LOG_DIR, 'audit.jsonl')
 const MAX_SIZE_BYTES = 100 * 1024 * 1024 // 100 MB
 
 export class AuditLog {
-  private config: ClawGuardConfig
+  private config: ShellWardConfig
   private rotating = false
 
-  constructor(config: ClawGuardConfig) {
+  constructor(config: ShellWardConfig) {
     this.config = config
     try {
       mkdirSync(LOG_DIR, { recursive: true, mode: 0o700 })
@@ -36,7 +36,7 @@ export class AuditLog {
       this.rotateIfNeeded()
     } catch (e: any) {
       // Log failure must not break plugin, but warn via stderr
-      try { process.stderr.write(`[ClawGuard] audit log write failed: ${e?.message}\n`) } catch {}
+      try { process.stderr.write(`[ShellWard] audit log write failed: ${e?.message}\n`) } catch {}
     }
   }
 

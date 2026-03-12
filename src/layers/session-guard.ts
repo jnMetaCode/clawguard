@@ -2,12 +2,12 @@
 // Uses: session_end (security summary), subagent_spawning (enforce policies)
 
 import { resolveLocale } from '../types'
-import type { ClawGuardConfig } from '../types'
+import type { ShellWardConfig } from '../types'
 import type { AuditLog } from '../audit-log'
 
 export function setupSessionGuard(
   api: any,
-  config: ClawGuardConfig,
+  config: ShellWardConfig,
   log: AuditLog,
   enforce: boolean,
 ) {
@@ -23,7 +23,7 @@ export function setupSessionGuard(
         ? '会话结束 — 安全审计完成'
         : 'Session ended — security audit complete',
     })
-  }, { name: 'clawguard.session-end', priority: 50 })
+  }, { name: 'shellward.session-end', priority: 50 })
 
   // === Subagent spawning: enforce security policies ===
   api.on('subagent_spawning', (event: any) => {
@@ -40,7 +40,7 @@ export function setupSessionGuard(
 
     // In strict mode, could block subagent spawning entirely
     // For now, just audit
-  }, { name: 'clawguard.subagent-guard', priority: 100 })
+  }, { name: 'shellward.subagent-guard', priority: 100 })
 
-  api.logger.info('[ClawGuard] L8 Session Guard enabled')
+  api.logger.info('[ShellWard] L8 Session Guard enabled')
 }
