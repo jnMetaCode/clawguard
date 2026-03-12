@@ -1,6 +1,6 @@
 # ShellWard
 
-**First bilingual (EN/ZH) security plugin for OpenClaw** — prompt injection detection, dangerous operation blocking, PII/secret redaction, audit logging.
+**First bilingual (EN/ZH) security plugin for OpenClaw** — the only plugin with Chinese prompt injection detection & Chinese PII redaction (ID card, phone, bank card). 8 defense layers, zero dependencies.
 
 [中文说明](#中文说明) | [English](#english)
 

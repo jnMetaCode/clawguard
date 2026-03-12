@@ -1,7 +1,7 @@
 {
   "name": "shellward",
-  "version": "0.3.3",
-  "description": "First bilingual (EN/ZH) security plugin for OpenClaw — injection detection, dangerous operation blocking, PII/secret redaction, audit logging",
+  "version": "0.3.4",
+  "description": "First bilingual (EN/ZH) security plugin for OpenClaw — Chinese PII detection (ID card/phone/bank card), prompt injection detection (13 ZH + 12 EN rules), dangerous command blocking, audit logging. Zero dependencies.",
   "keywords": [
     "shellward",
     "openclaw",
