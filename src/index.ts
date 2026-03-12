@@ -42,7 +42,7 @@ function mergeConfig(userConfig: Partial<ClawGuardConfig> | undefined): ClawGuar
 }
 
 export default {
-  id: 'clawguard',
+  id: 'openclaw-guard',
 
   register(api: any) {
     const config = mergeConfig(api.config)
@@ -113,7 +113,7 @@ export default {
       level: 'INFO',
       layer: 'L1',
       action: 'allow',
-      detail: `ClawGuard v0.3.0 started with ${enabledCount} layers`,
+      detail: `ClawGuard v0.3.1 started with ${enabledCount} layers`,
     })
   },
 }
