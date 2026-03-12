@@ -5,7 +5,7 @@ user-invocable: true
 disable-model-invocation: false
 ---
 
-# ClawGuard Security Deployment Guide / 安全部署指南
+# ShellWard Security Deployment Guide / 安全部署指南
 
 When the user invokes this skill, provide a complete security deployment checklist based on the following best practices. Check the current system state using available tools and give actionable recommendations.
 
@@ -35,7 +35,7 @@ When the user invokes this skill, provide a complete security deployment checkli
 - Suggest `chmod 600 ~/.env ~/.ssh/* ~/.aws/credentials`
 
 ### 4. Audit Logging / 审计日志
-- Verify ClawGuard audit log is active at ~/.openclaw/clawguard/audit.jsonl
+- Verify ShellWard audit log is active at ~/.openclaw/shellward/audit.jsonl
 - Show recent security events
 - Recommend log rotation and backup strategy
 - Suggest sending critical events to external SIEM
@@ -53,7 +53,7 @@ When the user invokes this skill, provide a complete security deployment checkli
 - Check Node.js version (must be >= 22.12)
 
 ## Available Commands
-Remind the user about ClawGuard's quick commands:
+Remind the user about ShellWard's quick commands:
 - `/security` — Full security status overview
 - `/audit [count] [filter]` — View audit log
 - `/harden` — Scan for issues, `/harden fix` to auto-fix

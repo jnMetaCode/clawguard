@@ -9,7 +9,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in ClawGuard, please report it responsibly.
+If you discover a security vulnerability in ShellWard, please report it responsibly.
 
 **DO NOT** open a public GitHub issue for security vulnerabilities.
 
@@ -37,7 +37,7 @@ We credit all reporters in our CHANGELOG (unless you prefer to remain anonymous)
 
 ## Security Measures
 
-ClawGuard itself is a security tool. We hold ourselves to a high standard:
+ShellWard itself is a security tool. We hold ourselves to a high standard:
 
 - Zero external dependencies (reduced supply chain risk)
 - All regex patterns reviewed for ReDoS resistance

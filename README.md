@@ -1,4 +1,4 @@
-# ClawGuard
+# ShellWard
 
 **First bilingual (EN/ZH) security plugin for OpenClaw** — prompt injection detection, dangerous operation blocking, PII/secret redaction, audit logging.
 
@@ -10,7 +10,7 @@
 
 ### What it does
 
-ClawGuard protects your OpenClaw agent with 8 defense layers:
+ShellWard protects your OpenClaw agent with 8 defense layers:
 
 | Layer | Name | Hook | What it does |
 |-------|------|------|-------------|
@@ -18,7 +18,7 @@ ClawGuard protects your OpenClaw agent with 8 defense layers:
 | L2 | Output Scanner | `tool_result_persist` | Redacts API keys, private keys, PII from tool output |
 | L3 | Tool Blocker | `before_tool_call` | Blocks dangerous commands (`rm -rf /`, `curl \| sh`, etc.) |
 | L4 | Input Auditor | `before_tool_call` + `message_received` | Detects prompt injection attacks (EN + ZH) |
-| L5 | Security Gate | `registerTool` | Defense-in-depth — agent must call `clawguard_check` before risky operations |
+| L5 | Security Gate | `registerTool` | Defense-in-depth — agent must call `shellward_check` before risky operations |
 | L6 | Outbound Guard | `message_sending` | Redacts PII from LLM responses + detects system prompt leaks via canary |
 | L7 | Data Flow Guard | `after_tool_call` + `before_tool_call` | Blocks data exfiltration chains (read file → send to network) |
 | L8 | Session Guard | `session_end` + `subagent_spawning` | Session security audit + subagent monitoring |
@@ -53,18 +53,18 @@ irm https://raw.githubusercontent.com/jnMetaCode/clawguard/main/install.ps1 | ie
 **Or install manually:**
 
 ```bash
-openclaw plugins install openclaw-guard
+openclaw plugins install shellward
 ```
 
 ```bash
 # Or via npm
-npm install openclaw-guard
-openclaw plugins install ./node_modules/openclaw-guard
+npm install shellward
+openclaw plugins install ./node_modules/shellward
 ```
 
 ### Configuration
 
-In your OpenClaw settings, configure the `openclaw-guard` plugin:
+In your OpenClaw settings, configure the `shellward` plugin:
 
 ```json
 {
@@ -90,7 +90,7 @@ In your OpenClaw settings, configure the `openclaw-guard` plugin:
 
 ### Audit log
 
-Logs are written to `~/.openclaw/clawguard/audit.jsonl`:
+Logs are written to `~/.openclaw/shellward/audit.jsonl`:
 
 ```jsonl
 {"ts":"2026-03-11T10:00:00.000Z","mode":"enforce","level":"CRITICAL","layer":"L3","action":"block","detail":"Dangerous command: rm -rf /","tool":"Bash","pattern":"rm_rf_root"}
@@ -101,13 +101,13 @@ Query with standard tools:
 
 ```bash
 # View all blocked actions
-grep '"action":"block"' ~/.openclaw/clawguard/audit.jsonl
+grep '"action":"block"' ~/.openclaw/shellward/audit.jsonl
 
 # View critical events
-grep '"level":"CRITICAL"' ~/.openclaw/clawguard/audit.jsonl | jq .
+grep '"level":"CRITICAL"' ~/.openclaw/shellward/audit.jsonl | jq .
 
 # Count events by layer
-jq -r '.layer' ~/.openclaw/clawguard/audit.jsonl | sort | uniq -c
+jq -r '.layer' ~/.openclaw/shellward/audit.jsonl | sort | uniq -c
 ```
 
 ### How the 8 layers work together
@@ -132,7 +132,7 @@ User Input
     │
     ▼
 ┌─────────────────────┐
-│ L5 Security Gate    │  Agent calls clawguard_check
+│ L5 Security Gate    │  Agent calls shellward_check
 │ (registerTool)      │  Returns ALLOWED or DENIED
 └─────────────────────┘
     │
@@ -175,7 +175,7 @@ User Input
 
 ### Quick Commands
 
-ClawGuard registers 5 slash commands for quick security operations:
+ShellWard registers 5 slash commands for quick security operations:
 
 | Command | Description |
 |---------|-------------|
@@ -187,7 +187,7 @@ ClawGuard registers 5 slash commands for quick security operations:
 
 ### Security Deployment Guide
 
-ClawGuard protects at the **application layer**. For full security, also implement:
+ShellWard protects at the **application layer**. For full security, also implement:
 
 1. **Network control**: Bind OpenClaw to `127.0.0.1`, use reverse proxy with auth
 2. **Container isolation**: Run in Docker with `--cap-drop=ALL`, `--read-only`, non-root user
@@ -210,7 +210,7 @@ Apache-2.0
 
 ### 功能简介
 
-ClawGuard 通过 8 层防御保护你的 OpenClaw 智能体：
+ShellWard 通过 8 层防御保护你的 OpenClaw 智能体：
 
 | 层 | 名称 | Hook | 作用 |
 |----|------|------|------|
@@ -251,7 +251,7 @@ irm https://raw.githubusercontent.com/jnMetaCode/clawguard/main/install.ps1 | ie
 **手动安装：**
 
 ```bash
-openclaw plugins install openclaw-guard
+openclaw plugins install shellward
 ```
 
 ### 配置
@@ -289,7 +289,7 @@ openclaw plugins install openclaw-guard
 
 ### 快捷命令
 
-ClawGuard 注册了 5 个斜杠命令，用于快速安全操作：
+ShellWard 注册了 5 个斜杠命令，用于快速安全操作：
 
 | 命令 | 说明 |
 |------|------|
@@ -301,7 +301,7 @@ ClawGuard 注册了 5 个斜杠命令，用于快速安全操作：
 
 ### 安全部署指南
 
-ClawGuard 在**应用层**提供保护。完整安全还需配合：
+ShellWard 在**应用层**提供保护。完整安全还需配合：
 
 1. **网络控制**：OpenClaw 绑定 `127.0.0.1`，使用带认证的反向代理
 2. **容器隔离**：在 Docker 中运行，使用 `--cap-drop=ALL`、`--read-only`、非 root 用户

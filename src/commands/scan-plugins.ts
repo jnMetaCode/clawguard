@@ -2,7 +2,7 @@
 
 import { existsSync, readFileSync, readdirSync, statSync } from 'fs'
 import { join } from 'path'
-import type { ClawGuardConfig } from '../types'
+import type { ShellWardConfig } from '../types'
 import { resolveLocale } from '../types'
 
 const HOME = process.env.HOME || '~'
@@ -20,7 +20,7 @@ const SUSPICIOUS_PATTERNS = [
   { pattern: /https?:\/\/(?!(?:github\.com|npmjs\.com|registry\.npmjs\.org))[^\s'"]+/g, name: 'external URL', risk: 'data exfiltration' },
 ]
 
-export function registerScanPluginsCommand(api: any, config: ClawGuardConfig) {
+export function registerScanPluginsCommand(api: any, config: ShellWardConfig) {
   const locale = resolveLocale(config)
 
   api.registerCommand({

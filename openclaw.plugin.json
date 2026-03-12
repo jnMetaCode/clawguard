@@ -1,8 +1,8 @@
 {
-  "id": "openclaw-guard",
-  "name": "ClawGuard",
+  "id": "shellward",
+  "name": "ShellWard",
   "description": "First bilingual (EN/ZH) security plugin for OpenClaw — injection detection, dangerous operation blocking, PII/secret redaction (incl. Chinese ID card, phone, bank card), audit logging",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "skills": ["./skills"],
   "configSchema": {
     "type": "object",

@@ -3,7 +3,7 @@
 import { DANGEROUS_COMMANDS } from '../rules/dangerous-commands'
 import { PROTECTED_PATHS } from '../rules/protected-paths'
 import { resolveLocale } from '../types'
-import type { ClawGuardConfig } from '../types'
+import type { ShellWardConfig } from '../types'
 import type { AuditLog } from '../audit-log'
 
 function textResult(text: string) {
@@ -79,14 +79,14 @@ function checkAction(
 
 export function setupSecurityGate(
   api: any,
-  config: ClawGuardConfig,
+  config: ShellWardConfig,
   log: AuditLog,
   enforce: boolean,
 ) {
   const locale = resolveLocale(config)
 
   if (!api.registerTool) {
-    api.logger.warn('[ClawGuard] L5 Security Gate skipped: registerTool not available')
+    api.logger.warn('[ShellWard] L5 Security Gate skipped: registerTool not available')
     return
   }
 
@@ -96,8 +96,8 @@ export function setupSecurityGate(
 
   // registerTool expects AgentTool interface: { name, label, description, parameters, execute }
   api.registerTool({
-    name: 'clawguard_check',
-    label: 'ClawGuard Security Check',
+    name: 'shellward_check',
+    label: 'ShellWard Security Check',
     description: toolDescription,
     parameters: {
       type: 'object',
@@ -127,5 +127,5 @@ export function setupSecurityGate(
     },
   })
 
-  api.logger.info('[ClawGuard] L5 Security Gate registered')
+  api.logger.info('[ShellWard] L5 Security Gate registered')
 }

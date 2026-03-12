@@ -3,26 +3,26 @@
 import { readFileSync, statSync, existsSync, readdirSync } from 'fs'
 import { join } from 'path'
 import { execSync } from 'child_process'
-import type { ClawGuardConfig } from '../types'
+import type { ShellWardConfig } from '../types'
 import { resolveLocale } from '../types'
 
-const LOG_DIR = join(process.env.HOME || '~', '.openclaw', 'clawguard')
+const LOG_DIR = join(process.env.HOME || '~', '.openclaw', 'shellward')
 const LOG_FILE = join(LOG_DIR, 'audit.jsonl')
 
-export function registerSecurityCommand(api: any, config: ClawGuardConfig) {
+export function registerSecurityCommand(api: any, config: ShellWardConfig) {
   const locale = resolveLocale(config)
 
   api.registerCommand({
     name: 'security',
     description: locale === 'zh'
-      ? '🛡️ ClawGuard 安全状态总览'
-      : '🛡️ ClawGuard security status overview',
+      ? '🛡️ ShellWard 安全状态总览'
+      : '🛡️ ShellWard security status overview',
     acceptsArgs: false,
     handler: () => {
       const lines: string[] = []
       const zh = locale === 'zh'
 
-      lines.push(zh ? '🛡️ **ClawGuard 安全状态报告**' : '🛡️ **ClawGuard Security Status Report**')
+      lines.push(zh ? '🛡️ **ShellWard 安全状态报告**' : '🛡️ **ShellWard Security Status Report**')
       lines.push('')
 
       // 1. Layer status

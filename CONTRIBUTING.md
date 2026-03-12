@@ -1,26 +1,26 @@
-# Contributing to ClawGuard
+# Contributing to ShellWard
 
-Thank you for your interest in contributing! ClawGuard welcomes contributions from everyone.
+Thank you for your interest in contributing! ShellWard welcomes contributions from everyone.
 
 ## How to Contribute
 
 ### Reporting Bugs
 
-- Use [GitHub Issues](https://github.com/jnMetaCode/clawguard/issues)
+- Use [GitHub Issues](https://github.com/jnMetaCode/shellward/issues)
 - Include: OpenClaw version, Node.js version, steps to reproduce, expected vs actual behavior
 - For security vulnerabilities, see [SECURITY.md](SECURITY.md) instead
 
 ### Suggesting Features
 
 - Open a GitHub Issue with the `enhancement` label
-- Describe the use case and why it benefits ClawGuard users
+- Describe the use case and why it benefits ShellWard users
 
 ### Submitting Changes
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/my-feature`
 3. Make your changes
-4. Test with OpenClaw: `openclaw plugins list` should show ClawGuard loaded
+4. Test with OpenClaw: `openclaw plugins list` should show ShellWard loaded
 5. Commit with a descriptive message
 6. Push and open a Pull Request
 
@@ -48,7 +48,7 @@ Thank you for your interest in contributing! ClawGuard welcomes contributions fr
 
 ### Testing
 
-Currently ClawGuard uses manual integration testing with OpenClaw:
+Currently ShellWard uses manual integration testing with OpenClaw:
 
 ```bash
 # Verify plugin loads
@@ -58,7 +58,7 @@ openclaw plugins list
 openclaw agent --local -m "run rm -rf /" --session-id test
 
 # Check audit log
-cat ~/.openclaw/clawguard/audit.jsonl | jq .
+cat ~/.openclaw/shellward/audit.jsonl | jq .
 ```
 
 ## License

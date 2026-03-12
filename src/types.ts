@@ -1,6 +1,6 @@
-// src/types.ts — ClawGuard type definitions
+// src/types.ts — ShellWard type definitions
 
-export interface ClawGuardConfig {
+export interface ShellWardConfig {
   mode: 'enforce' | 'audit'
   locale: 'auto' | 'zh' | 'en'
   layers: {
@@ -64,7 +64,7 @@ export interface InjectionRule {
   category: string
 }
 
-export const DEFAULT_CONFIG: ClawGuardConfig = {
+export const DEFAULT_CONFIG: ShellWardConfig = {
   mode: 'enforce',
   locale: 'auto',
   layers: {
@@ -84,7 +84,7 @@ export const DEFAULT_CONFIG: ClawGuardConfig = {
  * Detect locale from system environment.
  * Returns 'zh' if LANG/LC_ALL contains 'zh', otherwise 'en'.
  */
-export function resolveLocale(config: ClawGuardConfig): ResolvedLocale {
+export function resolveLocale(config: ShellWardConfig): ResolvedLocale {
   if (config.locale === 'zh') return 'zh'
   if (config.locale === 'en') return 'en'
   // auto detection

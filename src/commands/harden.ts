@@ -3,12 +3,12 @@
 import { existsSync, statSync, chmodSync, readFileSync, readdirSync } from 'fs'
 import { join } from 'path'
 import { execSync } from 'child_process'
-import type { ClawGuardConfig } from '../types'
+import type { ShellWardConfig } from '../types'
 import { resolveLocale } from '../types'
 
 const HOME = process.env.HOME || '~'
 
-export function registerHardenCommand(api: any, config: ClawGuardConfig) {
+export function registerHardenCommand(api: any, config: ShellWardConfig) {
   const locale = resolveLocale(config)
 
   api.registerCommand({

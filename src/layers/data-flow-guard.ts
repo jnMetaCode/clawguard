@@ -4,7 +4,7 @@
 
 import { PROTECTED_PATHS } from '../rules/protected-paths'
 import { resolveLocale } from '../types'
-import type { ClawGuardConfig } from '../types'
+import type { ShellWardConfig } from '../types'
 import type { AuditLog } from '../audit-log'
 
 // Network/outbound tools that could exfiltrate data
@@ -29,7 +29,7 @@ const MAX_TRACKED_READS = 500 // Prevent unbounded memory growth
 
 export function setupDataFlowGuard(
   api: any,
-  config: ClawGuardConfig,
+  config: ShellWardConfig,
   log: AuditLog,
   enforce: boolean,
 ) {
@@ -75,7 +75,7 @@ export function setupDataFlowGuard(
         sensitiveReads.delete(key)
       }
     }
-  }, { name: 'clawguard.data-flow-read-tracker', priority: 50 })
+  }, { name: 'shellward.data-flow-read-tracker', priority: 50 })
 
   // === Part 2: Block network tool calls if sensitive data was recently read ===
   api.on('before_tool_call', (event: any) => {
@@ -106,7 +106,7 @@ export function setupDataFlowGuard(
         })
 
         if (enforce) {
-          return { block: true, blockReason: `🚫 [ClawGuard] ${reason}` }
+          return { block: true, blockReason: `🚫 [ShellWard] ${reason}` }
         }
       }
     }
@@ -131,7 +131,7 @@ export function setupDataFlowGuard(
           })
 
           if (enforce) {
-            return { block: true, blockReason: `🚫 [ClawGuard] ${reason}` }
+            return { block: true, blockReason: `🚫 [ShellWard] ${reason}` }
           }
         }
       }
@@ -153,7 +153,7 @@ export function setupDataFlowGuard(
         })
       }
     }
-  }, { name: 'clawguard.data-flow-egress', priority: 250 })
+  }, { name: 'shellward.data-flow-egress', priority: 250 })
 
-  api.logger.info('[ClawGuard] L7 Data Flow Guard enabled')
+  api.logger.info('[ShellWard] L7 Data Flow Guard enabled')
 }

@@ -4,12 +4,12 @@
 import { redactSensitive } from '../rules/sensitive-patterns'
 import { getCanaryToken } from './prompt-guard'
 import { resolveLocale } from '../types'
-import type { ClawGuardConfig } from '../types'
+import type { ShellWardConfig } from '../types'
 import type { AuditLog } from '../audit-log'
 
 export function setupOutboundGuard(
   api: any,
-  config: ClawGuardConfig,
+  config: ShellWardConfig,
   log: AuditLog,
   enforce: boolean,
 ) {
@@ -33,8 +33,8 @@ export function setupOutboundGuard(
       })
       if (enforce) {
         const warning = locale === 'zh'
-          ? '⚠️ [ClawGuard] 检测到安全异常，本次回复已被拦截。可能存在提示词注入攻击。'
-          : '⚠️ [ClawGuard] Security anomaly detected, this response was blocked. Possible prompt injection attack.'
+          ? '⚠️ [ShellWard] 检测到安全异常，本次回复已被拦截。可能存在提示词注入攻击。'
+          : '⚠️ [ShellWard] Security anomaly detected, this response was blocked. Possible prompt injection attack.'
         return { content: warning }
       }
     }
@@ -57,11 +57,11 @@ export function setupOutboundGuard(
 
     const summary = findings.map(f => `${f.name}(${f.count})`).join(', ')
     const notice = locale === 'zh'
-      ? `\n\n⚠️ [ClawGuard] 回复中的敏感信息已自动脱敏: ${summary}`
-      : `\n\n⚠️ [ClawGuard] Sensitive data in response auto-redacted: ${summary}`
+      ? `\n\n⚠️ [ShellWard] 回复中的敏感信息已自动脱敏: ${summary}`
+      : `\n\n⚠️ [ShellWard] Sensitive data in response auto-redacted: ${summary}`
 
     return { content: redacted + notice }
-  }, { name: 'clawguard.outbound-guard', priority: 100 })
+  }, { name: 'shellward.outbound-guard', priority: 100 })
 
-  api.logger.info('[ClawGuard] L6 Outbound Guard enabled')
+  api.logger.info('[ShellWard] L6 Outbound Guard enabled')
 }

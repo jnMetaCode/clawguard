@@ -3,7 +3,7 @@
 import { INJECTION_RULES_ZH } from '../rules/injection-zh'
 import { INJECTION_RULES_EN } from '../rules/injection-en'
 import { resolveLocale } from '../types'
-import type { ClawGuardConfig, InjectionRule, ResolvedLocale } from '../types'
+import type { ShellWardConfig, InjectionRule, ResolvedLocale } from '../types'
 import type { AuditLog } from '../audit-log'
 
 interface CompiledRule extends InjectionRule {
@@ -30,7 +30,7 @@ const HIDDEN_CHAR_RANGES: [number, number, string][] = [
 
 export function setupInputAuditor(
   api: any,
-  config: ClawGuardConfig,
+  config: ShellWardConfig,
   log: AuditLog,
   enforce: boolean,
 ) {
@@ -49,7 +49,7 @@ export function setupInputAuditor(
 
     const fullText = texts.join('\n')
     return checkInjection(fullText, event.toolName, locale, compiled, config, log, enforce)
-  }, { name: 'clawguard.input-auditor', priority: 300 })
+  }, { name: 'shellward.input-auditor', priority: 300 })
 
   // Hook 2: Audit inbound messages
   api.on('message_received', (event: any) => {
@@ -79,9 +79,9 @@ export function setupInputAuditor(
           : `Injection patterns in message (score: ${score}): ${matched.map(m => m.name).join(', ')}`,
       })
     }
-  }, { name: 'clawguard.message-auditor', priority: 100 })
+  }, { name: 'shellward.message-auditor', priority: 100 })
 
-  api.logger.info(`[ClawGuard] L4 Input Auditor enabled (${compiled.length} injection rules)`)
+  api.logger.info(`[ShellWard] L4 Input Auditor enabled (${compiled.length} injection rules)`)
 }
 
 function checkInjection(
@@ -89,7 +89,7 @@ function checkInjection(
   tool: string,
   locale: ResolvedLocale,
   rules: CompiledRule[],
-  config: ClawGuardConfig,
+  config: ShellWardConfig,
   log: AuditLog,
   enforce: boolean,
 ): { block: true; blockReason: string } | undefined {
@@ -128,7 +128,7 @@ function checkInjection(
   })
 
   if (enforce) {
-    return { block: true, blockReason: `⚠️ [ClawGuard] ${reason}` }
+    return { block: true, blockReason: `⚠️ [ShellWard] ${reason}` }
   }
 }
 

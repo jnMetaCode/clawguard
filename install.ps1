@@ -1,11 +1,11 @@
-# ClawGuard One-Click Installer for Windows
-# Usage: irm https://raw.githubusercontent.com/jnMetaCode/clawguard/main/install.ps1 | iex
+# ShellWard One-Click Installer for Windows
+# Usage: irm https://raw.githubusercontent.com/jnMetaCode/shellward/main/install.ps1 | iex
 
 $ErrorActionPreference = "Stop"
 
 Write-Host ""
 Write-Host "==================================================" -ForegroundColor Cyan
-Write-Host "  ClawGuard Security Plugin - One-Click Install" -ForegroundColor Cyan
+Write-Host "  ShellWard Security Plugin - One-Click Install" -ForegroundColor Cyan
 Write-Host "==================================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -36,10 +36,10 @@ try {
 Write-Host ""
 
 # Install
-$pluginDir = Join-Path $env:USERPROFILE ".openclaw\plugins\clawguard"
+$pluginDir = Join-Path $env:USERPROFILE ".openclaw\plugins\shellward"
 
 if (Test-Path $pluginDir) {
-    Write-Host "ClawGuard already installed, updating..." -ForegroundColor Yellow
+    Write-Host "ShellWard already installed, updating..." -ForegroundColor Yellow
     Remove-Item -Recurse -Force $pluginDir
 }
 
@@ -48,12 +48,12 @@ if (!(Test-Path $parentDir)) {
     New-Item -ItemType Directory -Path $parentDir -Force | Out-Null
 }
 
-Write-Host "Downloading ClawGuard..." -ForegroundColor Blue
+Write-Host "Downloading ShellWard..." -ForegroundColor Blue
 try {
-    & git clone --depth 1 https://github.com/jnMetaCode/clawguard.git $pluginDir 2>$null
+    & git clone --depth 1 https://github.com/jnMetaCode/shellward.git $pluginDir 2>$null
     Remove-Item -Recurse -Force (Join-Path $pluginDir ".git") -ErrorAction SilentlyContinue
 } catch {
-    Write-Host "Download failed. Check: https://github.com/jnMetaCode/clawguard" -ForegroundColor Red
+    Write-Host "Download failed. Check: https://github.com/jnMetaCode/shellward" -ForegroundColor Red
     exit 1
 }
 
@@ -72,7 +72,7 @@ if ((Test-Path $indexFile) -and (Test-Path $pluginJson)) {
 
 Write-Host ""
 Write-Host "==================================================" -ForegroundColor Cyan
-Write-Host "Done! ClawGuard will auto-load next time OpenClaw starts." -ForegroundColor Green
+Write-Host "Done! ShellWard will auto-load next time OpenClaw starts." -ForegroundColor Green
 Write-Host ""
 Write-Host "Usage:" -ForegroundColor Yellow
 Write-Host '  openclaw agent --local -m "hello"   # Start agent with security'
@@ -80,5 +80,5 @@ Write-Host '  /security                            # View security status'
 Write-Host '  /audit                               # View audit log'
 Write-Host '  /harden                              # Security scan'
 Write-Host ""
-Write-Host "Docs: https://github.com/jnMetaCode/clawguard" -ForegroundColor Blue
+Write-Host "Docs: https://github.com/jnMetaCode/shellward" -ForegroundColor Blue
 Write-Host ""

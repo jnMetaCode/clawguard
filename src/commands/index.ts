@@ -1,6 +1,6 @@
-// src/commands/index.ts — Register all ClawGuard commands
+// src/commands/index.ts — Register all ShellWard commands
 
-import type { ClawGuardConfig } from '../types'
+import type { ShellWardConfig } from '../types'
 import { resolveLocale } from '../types'
 import { registerSecurityCommand } from './security'
 import { registerAuditCommand } from './audit'
@@ -8,7 +8,7 @@ import { registerHardenCommand } from './harden'
 import { registerScanPluginsCommand } from './scan-plugins'
 import { registerCheckUpdatesCommand } from './check-updates'
 
-export function registerAllCommands(api: any, config: ClawGuardConfig) {
+export function registerAllCommands(api: any, config: ShellWardConfig) {
   const locale = resolveLocale(config)
 
   // Register individual commands
@@ -22,11 +22,11 @@ export function registerAllCommands(api: any, config: ClawGuardConfig) {
   api.registerCommand({
     name: 'cg',
     description: locale === 'zh'
-      ? '🛡️ ClawGuard 安全命令帮助'
-      : '🛡️ ClawGuard security command help',
+      ? '🛡️ ShellWard 安全命令帮助'
+      : '🛡️ ShellWard security command help',
     acceptsArgs: false,
     handler: () => ({
-      text: locale === 'zh' ? `🛡️ **ClawGuard 快捷命令**
+      text: locale === 'zh' ? `🛡️ **ShellWard 快捷命令**
 
 | 命令 | 说明 |
 |------|------|
@@ -39,7 +39,7 @@ export function registerAllCommands(api: any, config: ClawGuardConfig) {
 **当前防御层 (8层):**
 L1 提示注入 · L2 输出脱敏 · L3 工具拦截 · L4 注入检测
 L5 安全门 · L6 回复脱敏 · L7 数据流监控 · L8 会话安全`
-        : `🛡️ **ClawGuard Quick Commands**
+        : `🛡️ **ShellWard Quick Commands**
 
 | Command | Description |
 |---------|-------------|
