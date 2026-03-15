@@ -1,6 +1,6 @@
 // src/layers/outbound-guard.ts — L6 OpenClaw Adapter
 // Thin adapter: wires OpenClaw hooks to ShellWard core engine for outbound response scanning
-// Compat: supports both old (message_sending) and new (message:sent) hook names
+// Compat: registers all known hook name variants
 
 import type { ShellWard } from '../core/engine'
 
@@ -21,11 +21,9 @@ export function setupOutboundGuard(api: any, guard: ShellWard, enforce: boolean)
     return undefined
   }
 
-  // Try new-style hook name first, then legacy
-  const registered = api.on('message:sent', handler, { name: 'shellward.outbound-guard', priority: 100 })
-  if (!registered) {
-    api.on('message_sending', handler, { name: 'shellward.outbound-guard', priority: 100 })
-  }
+  // Register ALL known naming conventions — OpenClaw silently ignores unknown ones
+  api.on('message_sending', handler, { name: 'shellward.outbound-guard', priority: 100 })
+  api.on('message:sent', handler, { name: 'shellward.outbound-guard-v2', priority: 100 })
 
   api.logger.info('[ShellWard] L6 Outbound Guard enabled')
 }
