@@ -1,12 +1,21 @@
 // src/audit-log.ts — JSONL audit log, zero dependencies
 
-import { appendFileSync, chmodSync, mkdirSync, renameSync, statSync, writeFileSync } from 'fs'
+import { appendFileSync, mkdirSync, renameSync, statSync, writeFileSync } from 'fs'
 import { join } from 'path'
+import { getHomeDir } from './utils'
 import type { AuditEntry, ShellWardConfig } from './types'
 
-const LOG_DIR = join(process.env.HOME || '~', '.openclaw', 'shellward')
+const LOG_DIR = join(getHomeDir(), '.openclaw', 'shellward')
 const LOG_FILE = join(LOG_DIR, 'audit.jsonl')
 const MAX_SIZE_BYTES = 100 * 1024 * 1024 // 100 MB
+
+const RISK_SCORES: Record<string, number> = {
+  CRITICAL: 10,
+  HIGH: 7,
+  MEDIUM: 4,
+  LOW: 2,
+  INFO: 0,
+}
 
 export class AuditLog {
   private config: ShellWardConfig
@@ -30,6 +39,7 @@ export class AuditLog {
       const record: AuditEntry = {
         ts: new Date().toISOString(),
         mode: this.config.mode,
+        riskScore: RISK_SCORES[entry.level] ?? 0,
         ...entry,
       }
       appendFileSync(LOG_FILE, JSON.stringify(record) + '\n', { mode: 0o600 })

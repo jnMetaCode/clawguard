@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.5.0] - 2026-03-14
+
+### Added
+- **ShellWard Core Engine** (`src/core/engine.ts`): Platform-agnostic AI Agent Security Middleware
+- **SDK 模式**: `import { ShellWard } from 'shellward'` — 任意 AI Agent 平台可用
+- **Windows 兼容**: 使用 `os.homedir()` 替代 `process.env.HOME`，支持 Windows
+- **npm scripts**: `npm run test` 运行全部 112 项测试
+
+### Changed
+- **L2/L6 审计模式**: PII 仅检测并记录审计，不再脱敏 — 内部使用允许，L7 拦截外泄
+- **架构重构**: OpenClaw 层改为薄适配器，核心逻辑集中在 engine.ts
+- **README**: 更新为审计模式说明，移除脱敏误导
+- **package.json**: 增加 exports、scripts，描述对齐定位文档
+
+### Fixed
+- tool-blocker: file_delete 正确传入 operation='delete'
+- update-check: writeCache 前确保目录存在
+- test-integration: 审计日志路径使用 homedir() 兼容 Windows
+
 ## [0.3.0] - 2026-03-12
 
 ### Added

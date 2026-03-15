@@ -3,10 +3,11 @@
 import { readFileSync, statSync, existsSync, readdirSync } from 'fs'
 import { join } from 'path'
 import { execSync } from 'child_process'
+import { getHomeDir } from '../utils'
 import type { ShellWardConfig } from '../types'
 import { resolveLocale } from '../types'
 
-const LOG_DIR = join(process.env.HOME || '~', '.openclaw', 'shellward')
+const LOG_DIR = join(getHomeDir(), '.openclaw', 'shellward')
 const LOG_FILE = join(LOG_DIR, 'audit.jsonl')
 
 export function registerSecurityCommand(api: any, config: ShellWardConfig) {
@@ -33,6 +34,9 @@ export function registerSecurityCommand(api: any, config: ShellWardConfig) {
         ['L3 Tool Blocker', config.layers.toolBlocker],
         ['L4 Input Auditor', config.layers.inputAuditor],
         ['L5 Security Gate', config.layers.securityGate],
+        ['L6 Outbound Guard', config.layers.outboundGuard],
+        ['L7 Data Flow Guard', config.layers.dataFlowGuard],
+        ['L8 Session Guard', config.layers.sessionGuard],
       ]
       for (const [name, enabled] of layers) {
         lines.push(`  ${enabled ? '✅' : '❌'} ${name}`)
@@ -54,15 +58,15 @@ export function registerSecurityCommand(api: any, config: ShellWardConfig) {
         const allLines = content.trim().split('\n').filter(Boolean)
         const total = allLines.length
         let blocks = 0
-        let redacts = 0
+        let audits = 0
         let criticals = 0
         for (const line of allLines) {
           if (line.includes('"action":"block"')) blocks++
-          if (line.includes('"action":"redact"')) redacts++
+          if (line.includes('"action":"audit"')) audits++
           if (line.includes('"level":"CRITICAL"')) criticals++
         }
         lines.push(`  ${zh ? '总事件' : 'Total events'}: ${total}`)
-        lines.push(`  ${zh ? '拦截' : 'Blocked'}: ${blocks} | ${zh ? '脱敏' : 'Redacted'}: ${redacts} | ${zh ? '严重' : 'Critical'}: ${criticals}`)
+        lines.push(`  ${zh ? '拦截' : 'Blocked'}: ${blocks} | ${zh ? '审计' : 'Audited'}: ${audits} | ${zh ? '严重' : 'Critical'}: ${criticals}`)
       } catch {
         lines.push(zh ? '  ⚠️ 日志文件不存在' : '  ⚠️ Log file not found')
       }

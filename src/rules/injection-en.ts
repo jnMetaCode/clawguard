@@ -99,4 +99,20 @@ export const INJECTION_RULES_EN: InjectionRule[] = [
     riskScore: 35,
     category: 'exfiltration',
   },
+  {
+    id: 'en_system_override',
+    name: 'System override claim',
+    pattern: '(?:SYSTEM|ADMIN|ROOT)\\s*(?:OVERRIDE|COMMAND|DIRECTIVE|ORDER)',
+    flags: 'i',
+    riskScore: 35,
+    category: 'privilege_escalation',
+  },
+  {
+    id: 'en_authorized_test',
+    name: 'Fake authorized test claim',
+    pattern: '(?:authorized|approved|legitimate)\\s+(?:penetration|security|pen)\\s*(?:test|testing|audit)',
+    flags: 'i',
+    riskScore: 30,
+    category: 'privilege_escalation',
+  },
 ]

@@ -1,21 +1,21 @@
 {
   "name": "shellward",
-  "version": "0.4.0",
-  "description": "唯一支持中国敏感数据保护的 AI Agent 安全插件 | 身份证号/手机号/银行卡号自动脱敏 | 中文注入检测 | 8层防御 | 零依赖 — The only AI agent security plugin with Chinese PII detection (ID card/phone/bank card), 26 injection rules, 8 defense layers. Zero dependencies.",
+  "version": "0.5.0",
+  "description": "AI Agent Security Middleware | 身份证/手机号/银行卡 PII 审计 | 中文注入检测 | 8层防御 | SDK + OpenClaw — Security layer for AI agents: prompt injection, data leak detection, tool control. Chinese PII audit, 8 defense layers. Zero dependencies.",
   "keywords": [
     "shellward",
-    "openclaw",
-    "security",
-    "plugin",
-    "injection-detection",
-    "pii-redaction",
     "ai-security",
-    "chinese-pii",
-    "身份证",
-    "数据脱敏",
+    "ai-agent",
+    "security-middleware",
     "prompt-injection",
     "llm-security",
-    "data-protection"
+    "data-protection",
+    "openclaw",
+    "plugin",
+    "sdk",
+    "身份证",
+    "PII",
+    "guardrails"
   ],
   "author": "jnMetaCode",
   "license": "Apache-2.0",
@@ -26,6 +26,18 @@
   },
   "type": "module",
   "main": "src/index.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "test": "npx tsx test-integration.ts && npx tsx test-edge-cases.ts && npx tsx test-sdk.ts",
+    "test:integration": "npx tsx test-integration.ts",
+    "test:edge": "npx tsx test-edge-cases.ts",
+    "test:sdk": "npx tsx test-sdk.ts"
+  },
   "openclaw": {
     "extensions": [
       "./src/index.ts"

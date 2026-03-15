@@ -5,7 +5,8 @@ import { join } from 'path'
 import type { ShellWardConfig } from '../types'
 import { resolveLocale } from '../types'
 
-const HOME = process.env.HOME || '~'
+import { getHomeDir } from '../utils'
+const HOME = getHomeDir()
 const OPENCLAW_DIR = join(HOME, '.openclaw')
 
 // Known suspicious patterns in plugin code
@@ -74,6 +75,7 @@ export function registerScanPluginsCommand(api: any, config: ShellWardConfig) {
       lines.push('')
 
       let totalRisks = 0
+      const riskyPluginNames = new Set<string>()
 
       for (const plugin of pluginDirs) {
         const risks: string[] = []
@@ -147,11 +149,14 @@ export function registerScanPluginsCommand(api: any, config: ShellWardConfig) {
             lines.push(`  ${risk}`)
             totalRisks++
           }
+          if (risks.some(r => r.startsWith('🔴') || (r.startsWith('⚠️') && !r.includes('签名') && !r.includes('signature') && !r.includes('依赖') && !r.includes('deps')))) {
+            riskyPluginNames.add(plugin.name)
+          }
         }
         lines.push('')
       }
 
-      // Summary
+      // Summary + removal commands
       lines.push('---')
       if (totalRisks === 0) {
         lines.push(zh ? '✅ **所有插件扫描通过**' : '✅ **All plugins passed scan**')
@@ -159,6 +164,17 @@ export function registerScanPluginsCommand(api: any, config: ShellWardConfig) {
         lines.push(zh
           ? `⚠️ **发现 ${totalRisks} 个潜在风险** — 请审查标记的插件`
           : `⚠️ **${totalRisks} potential risks found** — review flagged plugins`)
+
+        if (riskyPluginNames.size > 0) {
+          lines.push('')
+          lines.push(zh ? '**一键移除高风险插件** — 复制执行:' : '**Remove risky plugins** — copy & run:')
+          lines.push('```bash')
+          for (const name of riskyPluginNames) {
+            lines.push(`openclaw plugins uninstall ${name}`)
+          }
+          lines.push('```')
+        }
+
         lines.push(zh
           ? '💡 建议: 仅从可信渠道安装插件，定期运行 `/scan-plugins` 检查'
           : '💡 Tip: Only install plugins from trusted sources, run `/scan-plugins` regularly')

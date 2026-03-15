@@ -3,6 +3,8 @@
 export interface ShellWardConfig {
   mode: 'enforce' | 'audit'
   locale: 'auto' | 'zh' | 'en'
+  /** 启动时自动检查 OpenClaw 漏洞、插件风险、MCP 配置，发现问题时告警 */
+  autoCheckOnStartup?: boolean
   layers: {
     promptGuard: boolean
     outputScanner: boolean
@@ -22,7 +24,7 @@ export interface AuditEntry {
   ts: string
   level: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW' | 'INFO'
   layer: 'L0' | 'L1' | 'L2' | 'L3' | 'L4' | 'L5' | 'L6' | 'L7' | 'L8'
-  action: 'block' | 'redact' | 'detect' | 'allow' | 'inject' | 'error'
+  action: 'block' | 'redact' | 'audit' | 'detect' | 'allow' | 'inject' | 'error'
   detail: string
   tool?: string
   pattern?: string
@@ -67,6 +69,7 @@ export interface InjectionRule {
 export const DEFAULT_CONFIG: ShellWardConfig = {
   mode: 'enforce',
   locale: 'auto',
+  autoCheckOnStartup: true,
   layers: {
     promptGuard: true,
     outputScanner: true,

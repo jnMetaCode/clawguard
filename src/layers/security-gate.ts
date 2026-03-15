@@ -1,10 +1,7 @@
-// src/layers/security-gate.ts — L5: Security Gate Tool (defense-in-depth via registerTool)
+// src/layers/security-gate.ts — L5 OpenClaw Adapter
+// Thin adapter: registers shellward_check tool via OpenClaw's registerTool API
 
-import { DANGEROUS_COMMANDS } from '../rules/dangerous-commands'
-import { PROTECTED_PATHS } from '../rules/protected-paths'
-import { resolveLocale } from '../types'
-import type { ShellWardConfig } from '../types'
-import type { AuditLog } from '../audit-log'
+import type { ShellWard } from '../core/engine'
 
 function textResult(text: string) {
   return {
@@ -13,88 +10,16 @@ function textResult(text: string) {
   }
 }
 
-function checkAction(
-  action: string,
-  details: string,
-  locale: 'zh' | 'en',
-  log: AuditLog,
-): { status: string; reason?: string } {
-  // Check dangerous commands
-  if (action === 'exec' || action === 'shell') {
-    for (const rule of DANGEROUS_COMMANDS) {
-      if (rule.pattern.test(details)) {
-        const desc = locale === 'zh' ? rule.description_zh : rule.description_en
-        log.write({
-          level: 'CRITICAL',
-          layer: 'L5',
-          action: 'block',
-          detail: `Gate denied: ${action} — ${desc}`,
-          pattern: rule.id,
-        })
-        return { status: 'DENIED', reason: desc }
-      }
-    }
-  }
-
-  // Check protected paths
-  if (action === 'file_delete' || action === 'file_write') {
-    for (const rule of PROTECTED_PATHS) {
-      if (rule.pattern.test(details)) {
-        const desc = locale === 'zh' ? rule.description_zh : rule.description_en
-        log.write({
-          level: 'HIGH',
-          layer: 'L5',
-          action: 'block',
-          detail: `Gate denied: ${action} — ${desc}`,
-          pattern: rule.id,
-        })
-        return { status: 'DENIED', reason: desc }
-      }
-    }
-  }
-
-  // Block payment operations
-  if (['payment', 'transfer', 'purchase'].includes(action)) {
-    const reason = locale === 'zh'
-      ? '安全策略禁止自动执行支付操作'
-      : 'Payment operations are blocked by security policy'
-    log.write({
-      level: 'CRITICAL',
-      layer: 'L5',
-      action: 'block',
-      detail: `Gate denied: ${action}`,
-      pattern: 'no_payment',
-    })
-    return { status: 'DENIED', reason }
-  }
-
-  log.write({
-    level: 'INFO',
-    layer: 'L5',
-    action: 'allow',
-    detail: `Gate allowed: ${action}`,
-  })
-  return { status: 'ALLOWED' }
-}
-
-export function setupSecurityGate(
-  api: any,
-  config: ShellWardConfig,
-  log: AuditLog,
-  enforce: boolean,
-) {
-  const locale = resolveLocale(config)
-
+export function setupSecurityGate(api: any, guard: ShellWard, enforce: boolean) {
   if (!api.registerTool) {
     api.logger.warn('[ShellWard] L5 Security Gate skipped: registerTool not available')
     return
   }
 
-  const toolDescription = locale === 'zh'
+  const toolDescription = guard.locale === 'zh'
     ? '在执行任何 Shell 命令、文件删除、邮件发送或支付操作前，必须先调用此工具进行安全检查。传入 action 类型和具体参数。'
     : 'MUST be called before executing any shell command, file deletion, email sending, or payment operation. Pass the action type and parameters for security review.'
 
-  // registerTool expects AgentTool interface: { name, label, description, parameters, execute }
   api.registerTool({
     name: 'shellward_check',
     label: 'ShellWard Security Check',
@@ -113,17 +38,17 @@ export function setupSecurityGate(
       },
       required: ['action', 'details'],
     },
-    execute: async (
-      _toolCallId: string,
-      params: Record<string, unknown>,
-    ) => {
+    execute: async (_toolCallId: string, params: Record<string, unknown>) => {
       const action = typeof params.action === 'string' ? params.action.trim() : ''
       const details = typeof params.details === 'string' ? params.details.trim() : ''
       if (!action) {
         return textResult(JSON.stringify({ status: 'DENIED', reason: 'action parameter is required' }))
       }
-      const result = checkAction(action, details, locale, log)
-      return textResult(JSON.stringify(result))
+      const result = guard.checkAction(action, details)
+      return textResult(JSON.stringify({
+        status: result.allowed ? 'ALLOWED' : 'DENIED',
+        reason: result.reason,
+      }))
     },
   })
 

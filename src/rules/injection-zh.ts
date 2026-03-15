@@ -62,8 +62,36 @@ export const INJECTION_RULES_ZH: InjectionRule[] = [
   {
     id: 'zh_data_exfil',
     name: '数据外泄',
-    pattern: '(?:把|将)(?:所有|全部)?(?:对话|聊天|消息|记录|历史|数据|文件)(?:发送|传输|上传|转发)(?:到|给)',
+    pattern: '(?:把|将)(?:所有|全部)?(?:对话|聊天|消息|记录|历史|数据|文件)(?:的内容|的信息|中的数据)?(?:发送|传输|上传|转发)(?:到|给)',
     riskScore: 40,
+    category: 'exfiltration',
+  },
+  {
+    id: 'zh_emergency_auth',
+    name: '伪造紧急授权',
+    pattern: '(?:紧急|特别|最高|管理员|系统管理员|超级管理员)(?:的)?(?:授权|许可|批准|命令|指令|权限)',
+    riskScore: 30,
+    category: 'privilege_escalation',
+  },
+  {
+    id: 'zh_force_exec',
+    name: '强制执行指令',
+    pattern: '(?:直接|立即|马上|强制|必须)(?:执行|运行|操作)',
+    riskScore: 20,
+    category: 'override',
+  },
+  {
+    id: 'zh_task_hijack',
+    name: '任务劫持',
+    pattern: '(?:你的)?(?:新|真正的|实际的)(?:任务|目标|使命|工作)(?:是|变成|改为)',
+    riskScore: 40,
+    category: 'role_hijack',
+  },
+  {
+    id: 'zh_send_to_url',
+    name: '发送到外部 URL',
+    pattern: '(?:发送|传输|上传|转发|发)(?:到|给|至)\\s*https?://',
+    riskScore: 35,
     category: 'exfiltration',
   },
   {

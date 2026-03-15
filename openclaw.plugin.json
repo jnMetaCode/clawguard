@@ -1,8 +1,8 @@
 {
   "id": "shellward",
   "name": "ShellWard",
-  "description": "First bilingual (EN/ZH) security plugin for OpenClaw — injection detection, dangerous operation blocking, PII/secret redaction (incl. Chinese ID card, phone, bank card), audit logging",
-  "version": "0.4.0",
+  "description": "AI Agent Security Middleware — injection detection, dangerous operation blocking, PII audit (incl. Chinese ID card, phone, bank card), data exfiltration prevention. SDK + OpenClaw plugin.",
+  "version": "0.5.0",
   "skills": ["./skills"],
   "configSchema": {
     "type": "object",
@@ -37,6 +37,11 @@
         "type": "number",
         "default": 60,
         "description": "Injection risk score threshold (0-100) to trigger block/alert"
+      },
+      "autoCheckOnStartup": {
+        "type": "boolean",
+        "default": true,
+        "description": "Auto-check OpenClaw vulns, plugin risks, MCP config on startup"
       }
     }
   },

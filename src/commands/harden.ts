@@ -6,7 +6,8 @@ import { execSync } from 'child_process'
 import type { ShellWardConfig } from '../types'
 import { resolveLocale } from '../types'
 
-const HOME = process.env.HOME || '~'
+import { getHomeDir } from '../utils'
+const HOME = getHomeDir()
 
 export function registerHardenCommand(api: any, config: ShellWardConfig) {
   const locale = resolveLocale(config)
@@ -169,6 +170,43 @@ export function registerHardenCommand(api: any, config: ShellWardConfig) {
       } catch {
         lines.push(zh ? '  ℹ️ Docker 未安装（建议安装以支持容器隔离）' : '  ℹ️ Docker not installed (recommended for isolation)')
       }
+      lines.push('')
+
+      // === 5. One-click scripts ===
+      lines.push(zh ? '### 一键安全脚本' : '### One-click Security Scripts')
+
+      // Dockerfile
+      lines.push(zh ? '**容器隔离** — 复制以下 Dockerfile:' : '**Container isolation** — copy this Dockerfile:')
+      lines.push('```dockerfile')
+      lines.push('FROM node:22-slim')
+      lines.push('RUN useradd -m -s /bin/bash openclaw')
+      lines.push('USER openclaw')
+      lines.push('WORKDIR /home/openclaw')
+      lines.push('RUN npm install -g openclaw')
+      lines.push('COPY .env .env')
+      lines.push('EXPOSE 19000')
+      lines.push('CMD ["openclaw", "agent", "--local"]')
+      lines.push('```')
+      lines.push(zh
+        ? '运行: `docker build -t openclaw-safe . && docker run --rm -it openclaw-safe`'
+        : 'Run: `docker build -t openclaw-safe . && docker run --rm -it openclaw-safe`')
+      lines.push('')
+
+      // Firewall
+      lines.push(zh ? '**防火墙限制** — 仅允许必要出站:' : '**Firewall** — allow only necessary outbound:')
+      lines.push('```bash')
+      lines.push('# 只允许 HTTPS 出站（API 调用），禁止其他出站')
+      lines.push('sudo iptables -A OUTPUT -p tcp --dport 443 -j ACCEPT')
+      lines.push('sudo iptables -A OUTPUT -p tcp --dport 80 -j ACCEPT')
+      lines.push('sudo iptables -A OUTPUT -p udp --dport 53 -j ACCEPT  # DNS')
+      lines.push('sudo iptables -A OUTPUT -o lo -j ACCEPT               # localhost')
+      lines.push('sudo iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT')
+      lines.push('sudo iptables -A OUTPUT -j LOG --log-prefix "BLOCKED: "')
+      lines.push('sudo iptables -A OUTPUT -j DROP')
+      lines.push('```')
+      lines.push(zh
+        ? '⚠️ 执行前请确认不会影响其他服务'
+        : '⚠️ Review before applying — may affect other services')
       lines.push('')
 
       // === Summary ===

@@ -93,6 +93,18 @@ export const DANGEROUS_COMMANDS: DangerousCommandRule[] = [
     description_zh: '覆盖或删除定时任务',
     description_en: 'Overwrite or remove crontab entries',
   },
+  {
+    id: 'nc_exfil',
+    pattern: /\|\s*(?:nc|ncat|netcat)\s+\S+\s+\d+/i,
+    description_zh: '通过 netcat 向远程主机传输数据',
+    description_en: 'Pipe data to remote host via netcat',
+  },
+  {
+    id: 'crontab_append',
+    pattern: />>\s*(?:\/etc\/crontab|\/var\/spool\/cron)/i,
+    description_zh: '追加定时任务（可能植入后门）',
+    description_en: 'Append to crontab (potential backdoor)',
+  },
 ]
 
 /**

@@ -1,45 +1,30 @@
-// src/layers/session-guard.ts — L8: Session lifecycle security
-// Uses: session_end (security summary), subagent_spawning (enforce policies)
+// src/layers/session-guard.ts — L8 OpenClaw Adapter
+// Thin adapter: wires OpenClaw's session_end + subagent_spawning hooks to ShellWard core engine
 
-import { resolveLocale } from '../types'
-import type { ShellWardConfig } from '../types'
-import type { AuditLog } from '../audit-log'
+import type { ShellWard } from '../core/engine'
 
-export function setupSessionGuard(
-  api: any,
-  config: ShellWardConfig,
-  log: AuditLog,
-  enforce: boolean,
-) {
-  const locale = resolveLocale(config)
-
-  // === Session end: generate security summary ===
+export function setupSessionGuard(api: any, guard: ShellWard, enforce: boolean) {
   api.on('session_end', () => {
-    log.write({
+    guard.log.write({
       level: 'INFO',
       layer: 'L8',
       action: 'detect',
-      detail: locale === 'zh'
+      detail: guard.locale === 'zh'
         ? '会话结束 — 安全审计完成'
         : 'Session ended — security audit complete',
     })
   }, { name: 'shellward.session-end', priority: 50 })
 
-  // === Subagent spawning: enforce security policies ===
   api.on('subagent_spawning', (event: any) => {
     const mode = event.mode || 'unknown'
-
-    log.write({
+    guard.log.write({
       level: 'MEDIUM',
       layer: 'L8',
       action: 'detect',
-      detail: locale === 'zh'
+      detail: guard.locale === 'zh'
         ? `子 Agent 创建: mode=${mode}, agentId=${event.agentId || 'unknown'}`
         : `Subagent spawning: mode=${mode}, agentId=${event.agentId || 'unknown'}`,
     })
-
-    // In strict mode, could block subagent spawning entirely
-    // For now, just audit
   }, { name: 'shellward.subagent-guard', priority: 100 })
 
   api.logger.info('[ShellWard] L8 Session Guard enabled')

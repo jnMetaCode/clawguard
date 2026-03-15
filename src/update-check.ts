@@ -8,10 +8,11 @@
 // - All network failures are silent and cached to avoid repeated timeouts
 
 import { get } from 'https'
-import { readFileSync, writeFileSync } from 'fs'
+import { mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { join } from 'path'
+import { getHomeDir } from './utils'
 
-const CACHE_DIR = join(process.env.HOME || '~', '.openclaw', 'shellward')
+const CACHE_DIR = join(getHomeDir(), '.openclaw', 'shellward')
 const CACHE_FILE = join(CACHE_DIR, 'update-cache.json')
 const VULN_CACHE_FILE = join(CACHE_DIR, 'vuln-db-cache.json')
 const CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000 // 24 hours
@@ -179,6 +180,7 @@ function readCache<T>(path: string): T | null {
 
 function writeCache(path: string, data: unknown): void {
   try {
+    mkdirSync(CACHE_DIR, { recursive: true, mode: 0o700 })
     writeFileSync(path, JSON.stringify(data), { mode: 0o600 })
   } catch { /* ignore */ }
 }
