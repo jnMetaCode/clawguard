@@ -1,7 +1,7 @@
 {
   "name": "shellward",
   "version": "0.5.1",
-  "description": "AI Agent Security Middleware | 身份证/手机号/银行卡 PII 审计 | 中文注入检测 | 8层防御 | SDK + OpenClaw — Security layer for AI agents: prompt injection, data leak detection, tool control. Chinese PII audit, 8 defense layers. Zero dependencies.",
+  "description": "AI Agent Security Middleware — 8-layer defense against prompt injection, data exfiltration & dangerous commands. DLP model: use data freely, block external leaks. Zero dependencies. SDK + OpenClaw plugin. Supports LangChain, AutoGPT, Claude Code, Cursor, OpenAI Agents.",
   "keywords": [
     "shellward",
     "ai-security",
@@ -10,12 +10,17 @@
     "prompt-injection",
     "llm-security",
     "data-protection",
+    "data-exfiltration",
+    "dlp",
+    "guardrails",
+    "langchain",
+    "autogpt",
+    "openai",
+    "cursor",
     "openclaw",
-    "plugin",
     "sdk",
-    "身份证",
     "PII",
-    "guardrails"
+    "agent-security"
   ],
   "author": "jnMetaCode",
   "license": "Apache-2.0",
