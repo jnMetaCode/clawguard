@@ -50,7 +50,7 @@ Your AI agent has full access to tools — shell, email, HTTP, file system. One 
 
 | Platform | Integration | Note |
 |----------|------------|------|
-| **OpenClaw** | Plugin | `openclaw plugins install shellward` — out of the box |
+| **OpenClaw** | Plugin + SDK | `openclaw plugins install shellward` — adapts to available hooks |
 | **Claude Code** | SDK | Anthropic's official CLI agent |
 | **Cursor** | SDK | AI-powered coding IDE |
 | **LangChain** | SDK | LLM application framework |

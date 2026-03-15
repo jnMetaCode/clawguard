@@ -20,7 +20,7 @@ import { registerAllCommands } from './commands/index'
 import { checkForUpdate } from './update-check'
 import { runAutoCheckOnStartup } from './auto-check'
 
-const CURRENT_VERSION = '0.5.0'
+const CURRENT_VERSION = '0.5.3'
 
 // Re-export core engine for SDK usage
 export { ShellWard } from './core/engine'
@@ -32,11 +32,14 @@ export type { ShellWardConfig } from './types'
  * If a security hook throws, we log the error and fail-safe:
  * - before_tool_call: block (deny on error, safer than allow)
  * - other hooks: return undefined (don't break the chain)
+ *
+ * Returns boolean indicating whether hook registration succeeded.
+ * This allows layers to detect missing hooks and register fallbacks.
  */
 function createSafeApi(api: any, guard: ShellWard): any {
   return {
     ...api,
-    on(hookName: string, handler: Function, opts?: any) {
+    on(hookName: string, handler: Function, opts?: any): boolean {
       const isBlockHook = hookName === 'before_tool_call'
       const wrappedHandler = (event: any) => {
         try {
@@ -56,7 +59,12 @@ function createSafeApi(api: any, guard: ShellWard): any {
           return undefined
         }
       }
-      api.on(hookName, wrappedHandler, opts)
+      try {
+        api.on(hookName, wrappedHandler, opts)
+        return true
+      } catch {
+        return false
+      }
     },
   }
 }

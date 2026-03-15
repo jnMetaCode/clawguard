@@ -1,9 +1,11 @@
 // src/layers/input-auditor.ts — L4 OpenClaw Adapter
-// Thin adapter: wires OpenClaw's before_tool_call + message_received hooks to ShellWard core engine
+// Thin adapter: wires OpenClaw hooks to ShellWard core engine for injection detection
+// Compat: supports both old (message_received) and new (message:received) hook names
 
 import type { ShellWard } from '../core/engine'
 
 export function setupInputAuditor(api: any, guard: ShellWard, enforce: boolean) {
+  // Tool call parameter scanning via before_tool_call
   api.on('before_tool_call', (event: any) => {
     const args: Record<string, any> = (event.params && typeof event.params === 'object') ? event.params : {}
     const texts = guard.extractTextFields(args)
@@ -22,11 +24,18 @@ export function setupInputAuditor(api: any, guard: ShellWard, enforce: boolean) 
     }
   }, { name: 'shellward.input-auditor', priority: 300 })
 
-  api.on('message_received', (event: any) => {
+  // Message scanning: try both OpenClaw hook naming conventions
+  const messageHandler = (event: any) => {
     const content = typeof event.content === 'string' ? event.content : ''
     if (!content) return
     guard.checkInjection(content, { source: 'message' })
-  }, { name: 'shellward.message-auditor', priority: 100 })
+  }
+
+  // Try new-style colon-separated hook name first, then legacy underscore style
+  const registered = api.on('message:received', messageHandler, { name: 'shellward.message-auditor', priority: 100 })
+  if (!registered) {
+    api.on('message_received', messageHandler, { name: 'shellward.message-auditor', priority: 100 })
+  }
 
   api.logger.info(`[ShellWard] L4 Input Auditor enabled`)
 }
