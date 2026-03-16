@@ -85,8 +85,8 @@ const LOW_RISK_TOOLS = new Set([
 
 const PKG_INSTALL_PATTERN = /(?:npm|yarn|pnpm)\s+(?:install|add|i)\s|pip\s+install\s|gem\s+install\s/i
 
-// Detect bash commands that send data externally (curl POST, wget POST, nc, etc.)
-const BASH_NETWORK_EXFIL = /\b(?:curl\s.*(?:-X\s*(?:POST|PUT|PATCH)|--data|-d\s|-F\s)|wget\s.*--post|nc\s|ncat\s|python[23]?\s.*(?:http|requests|urllib|socket)|node\s.*(?:http|fetch|axios))/i
+// Detect bash commands that send data externally (curl POST, wget POST, nc, mail, etc.)
+const BASH_NETWORK_EXFIL = /\b(?:curl\s.*(?:-X\s*(?:POST|PUT|PATCH)|--data|-d\s|-F\s)|wget\s.*--post|nc\s|ncat\s|python[23]?\s.*(?:http|requests|urllib|socket)|node\s.*(?:http|fetch|axios)|(?:mail|mailx|sendmail|mutt|msmtp)\s)/i
 
 const HONEYPOT_PATTERNS = [
   /(?:^|\/)wallet\.(?:key|json|dat)$/i,
