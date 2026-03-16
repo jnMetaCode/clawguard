@@ -1,6 +1,6 @@
 # ShellWard
 
-**AI Agent Security Middleware** — Protect AI agents from prompt injection, data exfiltration, and dangerous command execution.
+**AI Agent Security Middleware** — Protect AI agents from prompt injection, data exfiltration, and dangerous command execution. ShellWard acts as an LLM security middleware and AI agent firewall, intercepting tool calls at runtime to enforce agent guardrails before damage is done.
 
 8-layer defense-in-depth, DLP-style data flow control, zero dependencies. Works as **standalone SDK** or **OpenClaw plugin**.
 
@@ -13,7 +13,7 @@
 
 ## Demo
 
-![ShellWard Security Demo](https://github.com/jnMetaCode/shellward/releases/download/v0.5.0/demo-en.gif)
+![ShellWard AI agent firewall demo — blocking prompt injection, data exfiltration, and reverse shell attacks in real time](https://github.com/jnMetaCode/shellward/releases/download/v0.5.0/demo-en.gif)
 
 > 7 real-world scenarios: server wipe → reverse shell → prompt injection → DLP audit → data exfiltration chain → credential theft → APT attack chain
 
@@ -224,6 +224,10 @@ password: "MyP@ssw0rd!"       → Detected (Password)
 
 Remote vuln DB syncs every 24h, falls back to local DB when offline.
 
+## Use Cases
+
+ShellWard is built for teams that need runtime security for AI agents — whether you are building autonomous coding assistants, customer-facing chatbots with tool access, or internal automation powered by LLMs. Common use cases include MCP security enforcement, tool call interception and filtering, and adding agent guardrails to any LLM-powered workflow.
+
 ## Why ShellWard?
 
 | Capability | ShellWard | [agentguard](https://github.com/GoPlusSecurity/agentguard) | [pipelock](https://github.com/luckyPipewrench/pipelock) | [Sage](https://github.com/avast/sage) | [AgentSeal](https://github.com/AgentSeal/agentseal) |
@@ -251,7 +255,7 @@ Remote vuln DB syncs every 24h, falls back to local DB when offline.
 
 **AI Agent 安全中间件** — 保护 AI 代理免受提示词注入、数据泄露、危险命令执行。8 层纵深防御，零依赖。
 
-![ShellWard 安全防护演示](https://github.com/jnMetaCode/shellward/releases/download/v0.5.0/demo-zh.gif)
+![ShellWard AI Agent 安全防火墙演示 — 拦截提示词注入、数据泄露和反弹Shell攻击](https://github.com/jnMetaCode/shellward/releases/download/v0.5.0/demo-zh.gif)
 
 > 7 个真实攻击场景：服务器毁灭拦截 → 反弹 Shell → 注入检测 → DLP 审计 → 数据外泄链 → 凭证窃取 → APT 攻击链
 
