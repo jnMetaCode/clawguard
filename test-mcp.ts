@@ -131,18 +131,13 @@ async function runTests() {
     buf = Buffer.concat([buf, chunk])
 
     while (true) {
-      const hdrEnd = buf.indexOf('\r\n\r\n')
-      if (hdrEnd === -1) break
-      const hdr = buf.slice(0, hdrEnd).toString('ascii')
-      const m = hdr.match(/Content-Length:\s*(\d+)/i)
-      if (!m) { buf = buf.slice(hdrEnd + 4); continue }
-      const len = parseInt(m[1], 10)
-      const bodyStart = hdrEnd + 4
-      if (buf.length < bodyStart + len) break
-      const body = buf.slice(bodyStart, bodyStart + len).toString('utf8')
-      buf = buf.slice(bodyStart + len)
+      const nl = buf.indexOf(0x0a)
+      if (nl === -1) break
+      const line = buf.slice(0, nl).toString('utf8').trim()
+      buf = buf.slice(nl + 1)
+      if (!line) continue
       try {
-        const obj = JSON.parse(body)
+        const obj = JSON.parse(line)
         if (obj.id != null) responses.set(obj.id, obj)
       } catch { /* skip */ }
     }
@@ -150,9 +145,7 @@ async function runTests() {
 
   function sendMsg(id: number, method: string, params?: Record<string, unknown>) {
     const obj = { jsonrpc: '2.0', id, method, params: params || {} }
-    const body = Buffer.from(JSON.stringify(obj), 'utf8')
-    const header = Buffer.from(`Content-Length: ${body.length}\r\n\r\n`, 'ascii')
-    child.stdin.write(Buffer.concat([header, body]))
+    child.stdin.write(JSON.stringify(obj) + '\n')
   }
 
   // Wait for server to start
