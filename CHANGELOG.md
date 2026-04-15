@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.5.16] - 2026-04-15
+
+### Added
+- 支持平台表新增 **Hermes Agent**（Nous Research，通过 MCP 接入）
+
+### Fixed
+- `test-mcp.ts` 改为 NDJSON framing，与 server 对齐（此前 0/11，现在 11/11 全通过）
+
+### Changed
+- `CURRENT_VERSION` 同步到 0.5.16（此前滞留 0.5.10）
+
 ## [0.5.0] - 2026-03-14
 
 ### Added

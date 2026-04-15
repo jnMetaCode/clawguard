@@ -20,7 +20,7 @@ import { registerAllCommands } from './commands/index.js'
 import { checkForUpdate } from './update-check.js'
 import { runAutoCheckOnStartup } from './auto-check.js'
 
-const CURRENT_VERSION = '0.5.10'
+const CURRENT_VERSION = '0.5.16'
 
 // Re-export core engine for SDK usage
 export { ShellWard } from './core/engine.js'
